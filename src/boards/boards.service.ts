@@ -1,10 +1,63 @@
-import { Injectable } from '@nestjs/common';
-import { Board, BoardStatus } from './board.model';
-import { v1 as uuid } from 'uuid';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { BoardStatus } from './board-status.enum';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BoardRepository } from './board.repository';
+import { Board } from './board.entity';
 
 @Injectable()
 export class BoardsService {
+  // BoardRepository inject
+  constructor(
+    @InjectRepository(Board) private boardRepository: BoardRepository,
+  ) {}
+
+  async getAllBoard() : Promise<Board[]> {
+    const boards =  await this.boardRepository.find()
+    return boards
+  }
+
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.boardRepository.findOneBy({id});
+
+    if (!found) {
+      throw new NotFoundException(`can't find board with ${id}`);
+    }
+    return found;
+  }
+
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    const { title, description } = createBoardDto;
+
+    const board = this.boardRepository.create({
+      title: title,
+      description: description,
+      status: BoardStatus.PUBLIC,
+    });
+
+    await this.boardRepository.save(board);
+    return board;
+  }
+
+  async deleteBoard(id:number): Promise<void>{
+    const result = await this.boardRepository.delete(id);
+
+    if(result.affected ===0) {
+      throw new NotFoundException("cant find board")
+    }
+  }
+
+  async updateBoardStatus(id:number, status: BoardStatus) : Promise<Board>{
+    const board = await this.getBoardById(id);
+
+    board.status = status;
+
+    await this.boardRepository.save(board);
+    return board;
+
+  }
+  //local db에서 저장하는 방식
+  /*
   private boards: Board[] = [];
 
   getAllBoards(): Board[] {
@@ -27,12 +80,19 @@ export class BoardsService {
   }
 
   getBoardById(id: string): Board {
-    return this.boards.find((board) => board.id === id);
+    const found = this.boards.find((board) => board.id === id);
+
+    if (!found) {
+      throw new NotFoundException(`cant find board with ${id}`);
+    }
+
+    return found;
   }
 
   // board의 아이디가 다른 것들만 boards에 남겨둔다.
   deleteBoard(id: string): void {
-    this.boards = this.boards.filter((board) => board.id !== id);
+    const found = this.getBoardById(id);
+    this.boards = this.boards.filter((board) => board.id !== found.id);
   }
 
   updateBoardStatus(id: string, status: BoardStatus): Board {
@@ -40,4 +100,5 @@ export class BoardsService {
     board.status = status;
     return board;
   }
+  */
 }
