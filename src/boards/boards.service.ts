@@ -4,6 +4,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardRepository } from './board.repository';
 import { Board } from './board.entity';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BoardsService {
@@ -12,13 +13,23 @@ export class BoardsService {
     @InjectRepository(Board) private boardRepository: BoardRepository,
   ) {}
 
-  async getAllBoard() : Promise<Board[]> {
-    const boards =  await this.boardRepository.find()
-    return boards
+  // 모든 보드 겟
+  // async getAllBoard(): Promise<Board[]> {
+  //   const boards = await this.boardRepository.find();
+  //   return boards;
+  // }
+
+  // 특정 유저의 보드 모두 겟
+  async getAllBoard(user: User): Promise<Board[]> {
+    const query = this.boardRepository.createQueryBuilder('board');
+
+    query.where('board.userId=:userId', { userId: user.id });
+    const boards = await query.getMany();
+    return boards;
   }
 
   async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOneBy({id});
+    const found = await this.boardRepository.findOneBy({ id });
 
     if (!found) {
       throw new NotFoundException(`can't find board with ${id}`);
@@ -26,35 +37,38 @@ export class BoardsService {
     return found;
   }
 
-  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+  async createBoard(
+    createBoardDto: CreateBoardDto,
+    user: User,
+  ): Promise<Board> {
     const { title, description } = createBoardDto;
 
     const board = this.boardRepository.create({
       title: title,
       description: description,
       status: BoardStatus.PUBLIC,
+      user: user,
     });
 
     await this.boardRepository.save(board);
     return board;
   }
 
-  async deleteBoard(id:number): Promise<void>{
-    const result = await this.boardRepository.delete(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({ id, user });
 
-    if(result.affected ===0) {
-      throw new NotFoundException("cant find board")
+    if (result.affected === 0) {
+      throw new NotFoundException('cant find board');
     }
   }
 
-  async updateBoardStatus(id:number, status: BoardStatus) : Promise<Board>{
+  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
     const board = await this.getBoardById(id);
 
     board.status = status;
 
     await this.boardRepository.save(board);
     return board;
-
   }
   //local db에서 저장하는 방식
   /*
