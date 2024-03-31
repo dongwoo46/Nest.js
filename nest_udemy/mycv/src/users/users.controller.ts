@@ -1,26 +1,25 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Patch,
   Post,
+  Get,
+  Patch,
+  Delete,
+  Param,
   Query,
+  NotFoundException,
   Session,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UsersService } from './users.service';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
-import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthGuard } from '../guards/auth.guards';
-import { Serialize } from '../interceptors/serialize.interceptor';
+import { User } from './user.entity';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Serialize(UserDto)
 @Controller('auth')
@@ -37,7 +36,7 @@ export class UsersController {
   //   return this.usersService.findOne(session.userId);
   // }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard) // UseGuards() 인증이나 인가를 사용할때 가드클래스를 사용해서 확인할때 사용
   @Get('/whoami')
   whoAmI(@CurrentUser() user: User) {
     // 직접만든 @CurrentUser
