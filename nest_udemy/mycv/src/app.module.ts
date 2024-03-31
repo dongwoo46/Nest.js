@@ -18,29 +18,9 @@ const cookieSession = require('cookie-session');
       isGlobal: true, // configModule을 어플리케이션 영역 전체에 사용한다고 명시(환경정보가 필요한 모든 곳에서-전역사용)
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    TypeOrmModule.forRoot(), // db 마이그레이션 이용
-
-    // 환경변수 설정 버전
-    // TypeOrmModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (config: ConfigService) => {
-    //     return {
-    //       type: 'sqlite',
-    //       database: config.get<string>('DB_NAME'),
-    //       synchronize: true, // TypeORM 시작 시 엔티티의 구조를 파악해 DB 구조와 엔티티가 일치하도록 만듦
-    //       entities: [User, Report],
-    //     };
-    //   },
-    // }),
-
-    // TypeOrmModule.forRoot(TypeOrmConfig),
-
-    // TypeOrmModule.forRoot({
-    //   type: 'sqlite', // db종류
-    //   database: 'db.sqlite', //db이름
-    //   entities: [User, Report],
-    //   synchronize: true,
-    // }),
+    TypeOrmModule.forRoot({
+      keepConnectionAlive: true,
+    }), // db 마이그레이션 이용
   ],
   controllers: [AppController],
   // 파이프라인 글로벌 적용 방법
