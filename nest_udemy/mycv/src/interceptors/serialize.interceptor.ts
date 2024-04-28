@@ -25,6 +25,7 @@ export class SerializeInterceptor implements NestInterceptor {
     return handler.handle().pipe(
       map((data: any) => {
         //응답이 나가기 전에 응답을 처리하고 싶을 때 조작
+        // SerializeOptions 추가 ex) excludePrefixes: ['_']
         return plainToClass(this.dto, data, {
           excludeExtraneousValues: true, //UserDto 인스턴스가 있고 기본 JSON으로 변환할때마다 Expose로 표시된 속성만 공유
         });
