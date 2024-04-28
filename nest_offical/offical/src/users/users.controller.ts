@@ -9,10 +9,13 @@ import {
   SerializeOptions,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import { Response, Request } from 'express';
 
 @Controller('users')
 export class UsersController {
