@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Req } from '@nestjs/common';
+import { Controller, Get, Res, Req, Session } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response, Request } from 'express';
 import { Cookies } from './decorators/cookie.decorator';
@@ -45,5 +45,22 @@ export class AppController {
   @Get('/get-specific-cookie')
   getSpecificCookie(@Cookies('cookieName') cookieValue: string) {
     return cookieValue; // 특정 쿠키 값만 가져옴
+  }
+
+  @Get('/set-session')
+  setSession(@Session() session: Record<string, any>) {
+    session.user = { name: 'John', age: 30 }; // 세션에 사용자 정보 저장
+    return 'Session set';
+  }
+
+  @Get('/get-session')
+  getSession(@Session() session: Record<string, any>) {
+    console.log('sfsdfsdf');
+    const user = session.user; // 세션에서 사용자 정보 가져오기
+    return user ? user : 'No session data available';
+  }
+  @Get()
+  officalSessionExample(@Session() session: Record<string, any>) {
+    session.visits = session.visits ? session.visits + 1 : 1;
   }
 }

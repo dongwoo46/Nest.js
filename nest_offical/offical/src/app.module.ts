@@ -9,6 +9,7 @@ import { TasksService } from './tasks/tasks.service';
 import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerModule } from './logger/logger.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LoggerModule } from './logger/logger.module';
     TasksModule,
     ScheduleModule.forRoot(),
     LoggerModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],
