@@ -1,15 +1,21 @@
-import { Controller, Get, Res, Req, Session } from '@nestjs/common';
+import { Controller, Get, Res, Req, Session, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response, Request } from 'express';
 import { Cookies } from './decorators/cookie.decorator';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private appService: AppService) {}
+
+  // @Get()
+  // getHello(): string {
+  //   return this.appService.getHello();
+  // }
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async root(@Res() res: Response) {
+    // Handlebars 템플릿 렌더링
+    res.render('index', { message: 'Hellos from NestJS with Handlebars!' });
   }
 
   @Get('/set-cookie')
@@ -59,8 +65,8 @@ export class AppController {
     const user = session.user; // 세션에서 사용자 정보 가져오기
     return user ? user : 'No session data available';
   }
-  @Get()
-  officalSessionExample(@Session() session: Record<string, any>) {
-    session.visits = session.visits ? session.visits + 1 : 1;
-  }
+  // @Get()
+  // officalSessionExample(@Session() session: Record<string, any>) {
+  //   session.visits = session.visits ? session.visits + 1 : 1;
+  // }
 }

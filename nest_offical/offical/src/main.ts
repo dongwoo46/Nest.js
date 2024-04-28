@@ -5,13 +5,17 @@ import { LoggerService } from './logger/logger.service';
 import { RenewLogger } from './logger/renew-logger';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    // logger: ['error', 'warn', 'debug'],
-    // logger: new MyLogger(), // 로거를 단순히 클래스로 제공할때
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // const app = await NestFactory.create(AppModule, {
+  //   // logger: ['error', 'warn', 'debug'],
+  //   // logger: new MyLogger(), // 로거를 단순히 클래스로 제공할때
+  //   bufferLogs: true,
+  // });
   app.enableCors({
     // cors 설정
     origin: 'http://localhost:3000',
@@ -27,6 +31,11 @@ async function bootstrap() {
       saveUninitialized: false,
     }),
   );
+
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('hbs');
+
   await app.listen(3000);
 }
 bootstrap();
