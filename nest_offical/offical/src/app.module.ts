@@ -8,6 +8,7 @@ import { User } from './users/entities/user.entity';
 import { TasksService } from './tasks/tasks.service';
 import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     UsersModule,
     TasksModule,
     ScheduleModule.forRoot(),
-    TasksModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],
