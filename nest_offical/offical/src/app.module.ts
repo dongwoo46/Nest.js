@@ -10,6 +10,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerModule } from './logger/logger.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -24,10 +25,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       synchronize: true,
     }),
     UsersModule,
+    UploadsModule,
     TasksModule,
     ScheduleModule.forRoot(),
     LoggerModule,
     EventEmitterModule.forRoot(),
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],

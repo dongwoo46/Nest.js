@@ -1,7 +1,24 @@
-import { Controller, Get, Res, Req, Session, Render } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  Req,
+  Session,
+  Render,
+  UseInterceptors,
+  Post,
+  Body,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  UploadedFiles,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response, Request } from 'express';
 import { Cookies } from './decorators/cookie.decorator';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { SampleDto } from './sample.dto';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
 
 @Controller()
 export class AppController {
@@ -69,4 +86,91 @@ export class AppController {
   // officalSessionExample(@Session() session: Record<string, any>) {
   //   session.visits = session.visits ? session.visits + 1 : 1;
   // }
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('file2')
+  uploadFileAppController(
+    @Body() body: SampleDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return {
+      body,
+      file: file.buffer.toString(),
+    };
+  }
+
+  @Post('file')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files', // 파일을 저장할 경로
+        filename: (req, file, callback) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          return callback(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  uploadFileDiskStorage(@UploadedFile() file: Express.Multer.File) {
+    // 업로드된 파일의 정보를 반환하거나 처리합니다.
+    return {
+      filename: file.filename,
+      originalname: file.originalname,
+      // 기타 필요한 정보
+    };
+  }
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('file/pass-validation')
+  uploadFileAndPassValidation(
+    @Body() body: SampleDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'json',
+        })
+        .build({
+          fileIsRequired: false,
+        }),
+    )
+    file?: Express.Multer.File,
+  ) {
+    return {
+      body,
+      file: file?.buffer.toString(),
+    };
+  }
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('file/fail-validation')
+  uploadFileAndFailValidation(
+    @Body() body: SampleDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpg',
+        })
+        .build(),
+    )
+    file: Express.Multer.File,
+  ) {
+    return {
+      body,
+      file: file.buffer.toString(),
+    };
+  }
+
+  // 다중 파일 업로드
+  @Post('/uploads')
+  @UseInterceptors(FilesInterceptor('files')) // FilesInterceptor
+  // @UseInterceptors(FilesInterceptor('files', 3)) // 업로드 파일을 3개로 제한
+  // @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 1 }])) // name 값이 files에 대한 limit
+  // @UseInterceptors(AnyFilesInterceptor()) // 모든 파일 받기
+  uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+    // UploadedFiles
+    console.log(files);
+  }
 }

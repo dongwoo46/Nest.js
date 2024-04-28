@@ -11,11 +11,15 @@ import {
   ClassSerializerInterceptor,
   Req,
   Res,
+  UploadedFile,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { Response, Request } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('users')
 export class UsersController {
@@ -40,5 +44,31 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
+  }
+
+  @Post('/file')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files',
+        filename(_, file, callback): void {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          return callback(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  uploadFileUserController(@UploadedFile() file: Express.Multer.File) {
+    return {
+      url: `http://localhost:5000/users/file/${file.filename}`,
+    };
+  }
+
+  @Get('file/:filename')
+  async getImage(@Param('filename') filename: string, @Res() res: Response) {
+    res.sendFile(filename, { root: './files' });
   }
 }

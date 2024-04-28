@@ -9,22 +9,22 @@ export class TasksService {
     this.rewnewLogger.setContext('TasksServices');
   }
 
-  @Cron('45 * * * * *')
+  // @Cron('45 * * * * *')
   handleCron() {
     this.logger.debug('Called when the second is 45');
   }
 
-  @Interval(10000)
+  // @Interval(10000)
   handleInterval() {
     this.logger.debug('Called every 10 seconds');
   }
 
-  @Timeout(5000)
+  // @Timeout(5000)
   handleTimeout() {
     this.logger.debug('Called once after 5 seconds');
   }
 
-  @Cron('10 * * * * *')
+  // @Cron('10 * * * * *')
   testLogger() {
     this.rewnewLogger.customLog();
     this.rewnewLogger.warn('sdfsdfsdfsdf');
