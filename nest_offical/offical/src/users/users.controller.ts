@@ -25,6 +25,9 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Public } from 'src/decorators/public.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { PoliciesGuard } from 'src/casl/policies.guard';
+import { CheckPolicies } from 'src/decorators/check-policies.decorator';
+import { AppAbility } from 'src/casl/casl-ability.factory/casl-ability.factory';
 
 @Controller('users')
 export class UsersController {

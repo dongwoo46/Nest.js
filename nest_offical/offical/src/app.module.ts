@@ -12,6 +12,9 @@ import { LoggerModule } from './logger/logger.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UploadsModule } from './uploads/uploads.module';
 import { AuthModule } from './auth/auth.module';
+import { CaslModule } from './casl/casl.module';
+import { ArticleModule } from './article/article.module';
+import { Article } from './article/entities/article.entity';
 
 @Module({
   imports: [
@@ -22,7 +25,7 @@ import { AuthModule } from './auth/auth.module';
       username: 'root',
       password: '1234',
       database: 'test',
-      entities: [User],
+      entities: [User, Article],
       synchronize: true,
     }),
     UsersModule,
@@ -33,6 +36,8 @@ import { AuthModule } from './auth/auth.module';
     EventEmitterModule.forRoot(),
     UploadsModule,
     AuthModule,
+    CaslModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],

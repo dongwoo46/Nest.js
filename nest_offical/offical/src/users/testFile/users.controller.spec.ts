@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UsersController } from '../users.controller';
+import { UsersService } from '../users.service';
 
 const createUserDto: CreateUserDto = {
   firstName: 'firstName #1',
@@ -81,7 +81,7 @@ describe('UsersController', () => {
         lastName: 'lastName #1',
         id: 1,
       });
-      expect(usersService.findOne).toHaveBeenCalled();
+      expect(usersService.findOneById).toHaveBeenCalled();
     });
   });
 
