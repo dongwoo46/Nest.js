@@ -38,7 +38,7 @@ export class UsersController {
   @Get(':id')
   @UseInterceptors(new ClassSerializerInterceptor(CreateUserDto))
   findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return this.usersService.findOne(id);
+    return this.usersService.findOneById(id);
   }
 
   @Delete(':id')

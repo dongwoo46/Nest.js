@@ -11,6 +11,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerModule } from './logger/logger.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UploadsModule } from './uploads/uploads.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UploadsModule } from './uploads/uploads.module';
     LoggerModule,
     EventEmitterModule.forRoot(),
     UploadsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],
