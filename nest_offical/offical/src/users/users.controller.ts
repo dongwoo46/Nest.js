@@ -12,6 +12,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -20,16 +21,23 @@ import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/public.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @Public()
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
   @Get()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();

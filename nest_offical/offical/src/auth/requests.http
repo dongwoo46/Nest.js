@@ -6,3 +6,10 @@ Content-Type: application/json
     "username":"kimdongwoo",
     "password":"test"
 }
+
+
+
+
+### 인증 - AuthGuard
+GET http://localhost:3000/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInVzZXJuYW1lIjoia2ltZG9uZ3dvbyIsImlhdCI6MTcxNDQxMzk2MiwiZXhwIjoxNzE0NDE0MDIyfQ.PWOZnAiYeFTwtgcWiOMDCixa_LnYXvRCCqkVfFY6PgA

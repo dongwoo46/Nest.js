@@ -3,14 +3,28 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "firstName": "dongwoo3",
-  "lastName": "kim3",
-  "username": "kimdongwoo3",
-  "password": "test",
+  "firstName": "admin",
+  "lastName": "admin",
+  "username": "admin",
+  "password": "admin",
   "isActive": true
+}
+
+### Auth login get AccessToken
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "username":"admin",
+    "password":"admin"
 }
 
 
 ### 인증 - AuthGuard
 GET http://localhost:3000/auth/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInVzZXJuYW1lIjoia2ltZG9uZ3dvbyIsImlhdCI6MTcxNDQxMzk2MiwiZXhwIjoxNzE0NDE0MDIyfQ.PWOZnAiYeFTwtgcWiOMDCixa_LnYXvRCCqkVfFY6PgA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsInVzZXJuYW1lIjoiYWRtaW4iLCJyb2xlcyI6ImFkbWluIiwiaWF0IjoxNzE0NDIxODI4LCJleHAiOjE3MTQ0MjU0Mjh9.KPheu7p4MjFlIuS5phhy4bZCEa83pUs7_1zW04WnOhk
+
+
+### 모든 유저 정보 GET - Admin만
+GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3MTQ0MjEyNzIsImV4cCI6MTcxNDQyNDg3Mn0.Me-TjIk-7E73viy3qcWJDuLISrQxoUwN7UgpwKnMiKc
