@@ -8,6 +8,11 @@ import * as session from 'express-session';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import helmet from 'helmet';
+import {
+  SwaggerModule,
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+} from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,6 +22,7 @@ async function bootstrap() {
   //   // logger: new MyLogger(), // 로거를 단순히 클래스로 제공할때
   //   bufferLogs: true,
   // });
+
   app.enableCors({
     // cors 설정
     origin: 'http://localhost:3000',
@@ -33,9 +39,10 @@ async function bootstrap() {
     }),
   );
 
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  app.setViewEngine('hbs');
+  // app.useStaticAssets(join(__dirname, '..', 'public'));
+  // app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  // app.setViewEngine('hbs');
+
   // somewhere in your initialization file
   app.use(
     helmet({
@@ -57,6 +64,19 @@ async function bootstrap() {
       },
     }),
   );
+
+  const options: SwaggerDocumentOptions = {
+    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+  };
+  const config = new DocumentBuilder()
+    .setTitle('reports example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('reports')
+    .build();
+  const document = SwaggerModule.createDocument(app, config, options);
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(3000);
 }
 bootstrap();
