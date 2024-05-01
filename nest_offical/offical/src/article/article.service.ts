@@ -18,9 +18,9 @@ export class ArticleService {
   ) {}
   create(createArticleDto: CreateArticleDto) {
     const article = new Article();
-    article.authorId = createArticleDto.authorId;
+    article.title = createArticleDto.title;
     article.context = createArticleDto.context;
-    article.isPublished = createArticleDto.isPublished;
+
     return this.articleRepository.save(article);
   }
 

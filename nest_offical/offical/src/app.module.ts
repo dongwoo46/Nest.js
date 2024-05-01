@@ -16,6 +16,8 @@ import { CaslModule } from './casl/casl.module';
 import { ArticleModule } from './article/article.module';
 import { Article } from './article/entities/article.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { Report } from './reports/entities/report.entity';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -25,8 +27,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
       port: 3306,
       username: 'root',
       password: '1234',
-      database: 'test',
-      entities: [User, Article],
+      database: 'new',
+      entities: [User, Article, Report],
       synchronize: true,
     }),
     UsersModule,
@@ -56,6 +58,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
         limit: 100,
       },
     ]),
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],

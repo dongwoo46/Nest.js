@@ -1,0 +1,15 @@
+### article 생성
+POST http://localhost:3000/reports
+Content-Type: application/json
+
+{
+  "context" : "article 생성3",
+  "title" : "title3"
+}
+
+
+### 모든 article get
+GET  http://localhost:3000/reports
+
+### title로 article get
+GET  http://localhost:3000/reports/title3

@@ -1,4 +1,4 @@
-export class CreateArticleDto {
+export class CreateReportDto {
   context: string;
   title: string;
 }
