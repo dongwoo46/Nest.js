@@ -1,0 +1,8 @@
+POST http://localhost:3000/articles
+Content-Type: application/json
+
+{
+  "title":"title",
+  "context": "context3",
+  "name":"name"
+}
