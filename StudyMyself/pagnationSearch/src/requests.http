@@ -1,0 +1,15 @@
+POST http://localhost:3000/articles
+Content-Type: application/json
+
+{
+  "title":"title444efe",
+  "context": "context326",
+  "name":"name667"
+}
+
+### 모든 데이터 다 가져오기
+GET http://localhost:3000/articles
+
+
+### pagnation
+GET http://localhost:3000/articles/pagination?page=10
