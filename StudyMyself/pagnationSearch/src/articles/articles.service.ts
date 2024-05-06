@@ -3,7 +3,7 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { Article } from './entities/article.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class ArticlesService {
@@ -35,6 +35,28 @@ export class ArticlesService {
         last_page: Math.ceil(total / take),
       },
     };
+  }
+
+  async nameSearch(title: string, context: string): Promise<Article[]> {
+    // if (title && !context) {
+    //   const articles = await this.articleRepository.find({
+    //     where: { title: Like(`%${title}%`) },
+    //   });
+    //   return articles;
+    // }
+
+    // if (context && !title) {
+    //   const articles = await this.articleRepository.find({
+    //     where: { context: Like(`%${context}%`) },
+    //   });
+    //   return articles;
+    // }
+
+    const articles = await this.articleRepository.find({
+      where: { title: Like(`%${title}%`), context: Like(`%${context}%`) },
+    });
+
+    return articles;
   }
 
   findAll() {

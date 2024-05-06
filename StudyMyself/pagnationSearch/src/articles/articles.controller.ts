@@ -8,6 +8,7 @@ import {
   Delete,
   Inject,
   Query,
+  Logger,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -36,6 +37,15 @@ export class ArticlesController {
   @Get('/pagination')
   async paginate(@Query('page') page: number = 1): Promise<Article[]> {
     return await this.articlesService.paginate(page);
+  }
+
+  @Get('/search')
+  async search(
+    @Query('title') title: string = '',
+    @Query('context') context: string = '',
+  ): Promise<Article[]> {
+    Logger.log(title);
+    return await this.articlesService.nameSearch(title, context);
   }
 
   @Get(':id')

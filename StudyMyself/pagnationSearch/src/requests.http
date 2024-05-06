@@ -2,8 +2,8 @@ POST http://localhost:3000/articles
 Content-Type: application/json
 
 {
-  "title":"title444efe",
-  "context": "context326",
+  "title":"title100",
+  "context": "search",
   "name":"name667"
 }
 
@@ -12,4 +12,7 @@ GET http://localhost:3000/articles
 
 
 ### pagnation
-GET http://localhost:3000/articles/pagination?page=10
+GET http://localhost:3000/articles/search?title=title100
+
+### pagnation
+GET http://localhost:3000/articles/search?context=search

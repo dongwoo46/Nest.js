@@ -13,5 +13,6 @@ export const databaseConfig = async (
     database: configService.get<string>('DATABASE_DATABASE', 'new'),
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE', false),
+    logging: true,
   };
 };
