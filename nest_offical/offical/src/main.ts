@@ -8,6 +8,8 @@ import * as session from 'express-session';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import helmet from 'helmet';
+import { ConfigService } from '@nestjs/config';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -57,6 +59,18 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      skipMissingProperties: true,
+    }),
+  );
+
+  const configService = app.get(ConfigService);
+  const host = configService.get('DATABASE_HOST') || 3000;
   await app.listen(3000);
+  Logger.log(`Application running on port ${host}`);
 }
 bootstrap();

@@ -9,8 +9,8 @@ export class Article {
   isPublished: boolean;
   @Column({ nullable: true })
   authorId: number;
-  @Column()
+  @Column({ default: 'asdf' })
   context: string;
-  @Column()
+  @Column({ nullable: true })
   title: string;
 }

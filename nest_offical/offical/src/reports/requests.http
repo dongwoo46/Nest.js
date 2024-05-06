@@ -3,8 +3,8 @@ POST http://localhost:3000/reports
 Content-Type: application/json
 
 {
-  "context" : "article 생성3",
-  "title" : "title3"
+  "title" : "title3",
+  "context" : "article 생성3"
 }
 
 
