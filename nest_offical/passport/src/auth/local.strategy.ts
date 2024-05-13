@@ -17,7 +17,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ passReqToCallback: true });
     */
     super();
-
   }
 
   async validate(username: string, password: string): Promise<any> {
@@ -28,4 +27,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     return user;
   }
 
+  async validate2(request: Request, username: string, password: string) {
+    const contextId = ContextIdFactory.getByRequest(request);
+    // "AuthService" is a request-scoped provider
+    const authService = await this.moduleRef.resolve(AuthService, contextId);
+  }
 }

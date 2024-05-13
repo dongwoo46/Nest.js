@@ -3,8 +3,8 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "username": "admin2",
-  "password": "admin2"
+  "username": "test",
+  "password": "test"
 }
 
 ### 로그인
@@ -12,11 +12,15 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "username": "admin2",
-  "password": "admin2"
+  "username": "test",
+  "password": "test"
 }
 
 ### 인증 - AuthGuard
 GET http://localhost:3000/auth/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwic3ViIjoxLCJpYXQiOjE3MTQ1Mjg3MDYsImV4cCI6MTcxNDUyODc2Nn0.Yqj_kqri_Ag6IBl_suhcuJHCJwnRaorF6Cofd9J6XCQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VySWQiOjYsImlhdCI6MTcxNTYzMjg1OSwiZXhwIjoxNzE1NjMzNDU5fQ.qnclDThqntDvmx9parqFTzKDJ8QmTP5qUuK8Rbd6lxY
+
+
+### refreshToken이용 발급
+POST http://localhost:3000/auth/refreshToken
 
