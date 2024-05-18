@@ -14,7 +14,7 @@ export class UsersService {
   ) {}
   private readonly logger = new Logger(UsersService.name);
 
-  async create(createUserDto: CreateUserDto) {
+  async signUp(createUserDto: CreateUserDto) {
     const { email, password, nickname, ip, role } = createUserDto;
     const userUsingEmail = await this.findOneByEmail(email);
     const userUsingNickname = await this.findOneByNickName(nickname);
@@ -24,6 +24,10 @@ export class UsersService {
 
     const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);
+  }
+
+  async getAllUsers() {
+    return this.usersRepository.find({ relations: ['reports'] });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -40,7 +44,7 @@ export class UsersService {
   }
   async findOneByEmail(email: string): Promise<User | undefined> {
     return await this.usersRepository.findOne({
-      where: { email: email.toLowerCase() },
+      where: { email: email },
     });
   }
   async findOneByNickName(nickname: string): Promise<User | undefined> {
@@ -49,8 +53,12 @@ export class UsersService {
     });
   }
 
-  findOneByRefreshToken(refreshToken: string): Promise<User | undefined> {
-    return this.usersRepository.findOneBy({ refreshToken: refreshToken });
+  async findOneByRefreshToken(refreshToken: string): Promise<User | undefined> {
+    return await this.usersRepository.findOneBy({ refreshToken: refreshToken });
+  }
+
+  findOneByUsername(username: string): Promise<User | undefined> {
+    return this.usersRepository.findOneBy({ username: username });
   }
 
   async saveRefreshToken(userId, refreshToken) {

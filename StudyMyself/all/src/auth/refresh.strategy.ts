@@ -4,8 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 
+import { jwtConstants } from './constants';
 import { UsersService } from 'src/users/users.service';
-import { jwtConstants } from '../constants';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {

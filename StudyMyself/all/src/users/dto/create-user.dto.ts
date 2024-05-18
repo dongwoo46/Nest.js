@@ -18,5 +18,8 @@ export class CreateUserDto {
   nickname: string;
 
   @IsString()
+  username: string;
+
+  @IsString()
   ip: string;
 }

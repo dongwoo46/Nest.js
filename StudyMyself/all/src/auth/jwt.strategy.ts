@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { jwtConstants } from '../constants';
+import { jwtConstants } from './constants';
 
 export interface Payload {
   userId: number;

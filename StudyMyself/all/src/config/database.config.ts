@@ -13,7 +13,7 @@ export const databaseConfig = async (
     database: configService.get<string>('DATABASE_DATABASE'),
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
-    logging: true,
+    // logging: true,
     dropSchema: true,
   };
 };

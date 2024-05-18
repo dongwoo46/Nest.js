@@ -1,10 +1,17 @@
 import { IsNotEmpty } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Report {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   reportId: number;
 
   @Column()
