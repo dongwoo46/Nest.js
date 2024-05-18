@@ -1,4 +1,4 @@
-import { Expose, Transform, Type } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import { CreateReportDto } from 'src/reports/dto/create-report.dto';
 
 export class ResponseUserDto {
@@ -12,7 +12,7 @@ export class ResponseUserDto {
   nickname: string;
   @Expose()
   ip: string;
-  @Type(() => CreateReportDto)
+  @Transform(({ obj }) => obj.reports.map((report) => report))
   @Expose()
   reports: CreateReportDto[];
 }

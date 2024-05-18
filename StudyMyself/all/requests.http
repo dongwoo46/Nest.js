@@ -30,13 +30,13 @@ POST http://localhost:3000/auth/refreshToken
 
 ### 모든 유저 정보 get
 GET http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5NzQ2NywiZXhwIjoxNzE1OTk4MDY3fQ.tAMR6LjG-TM6aL4yMWp5C9C21zkJl4XEmAjzRzXOq-E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5ODA5NywiZXhwIjoxNzE1OTk4Njk3fQ.FWttmyZcDqmOw-oJ3IXUlaPe4BYL0F29oXREEWy1X-E
 
 
 ### report 생산
 POST http://localhost:3000/reports
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5NzQ2NywiZXhwIjoxNzE1OTk4MDY3fQ.tAMR6LjG-TM6aL4yMWp5C9C21zkJl4XEmAjzRzXOq-E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5ODI3OCwiZXhwIjoxNzE1OTk4ODc4fQ.gRAtrJVfUHvvSjjL5lDafHBUeWPDySuqsvAX0S4JXjs
 
 {
   "title":"나는 신이다",
