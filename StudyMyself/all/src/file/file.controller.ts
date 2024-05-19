@@ -14,11 +14,12 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import path, { extname } from 'path';
 import { Response as expRes } from 'express';
 import * as fs from 'fs';
-
-@Controller('file1')
+import { Public } from 'src/auth/public.decorator';
+import * as path from 'path';
+@Public()
+@Controller('file')
 export class FileController {
   constructor(private config: ConfigService) {}
 
@@ -26,7 +27,7 @@ export class FileController {
   // http://localhost:3000/file
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
-  create(@UploadedFile() file) {
+  create(@UploadedFile() file: Express.Multer.File) {
     const path = file.path.replace(this.config.get('ATTACH_SAVE_PATH'), '');
     // 원본파일명과 저장된 파일명을 리턴해서 다운로드 받을때 씀
     return {

@@ -20,7 +20,7 @@ import { format } from 'date-fns'; // 날짜 형식 라이브러리
           destination: function (req, file, cb) {
             // 파일저장위치 + 년월 에다 업로드 파일을 저장한다.
             // 요 부분을 원하는 데로 바꾸면 된다.
-            const dest = `${config.get('ATTACH_SAVE_PATH')}/${format(new Date(), 'yyyyMMDD')}/`;
+            const dest = `${config.get('ATTACH_SAVE_PATH')}/${format(new Date(), 'yyyyMMdd')}/`;
 
             if (!fs.existsSync(dest)) {
               fs.mkdirSync(dest, { recursive: true });
