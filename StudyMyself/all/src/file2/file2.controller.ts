@@ -22,7 +22,7 @@ import { Response as expRes } from 'express';
 import { Public } from 'src/auth/public.decorator';
 import { FileExistGuard } from './file-exist.guard';
 import { NoQueryGuard } from './no-query.guard';
-import { createReadStream, createWriteStream, rename } from 'fs';
+import { appendFile, createReadStream, createWriteStream, rename } from 'fs';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import * as archiver from 'archiver';
 @Controller('file2')
@@ -185,5 +185,53 @@ export class File2Controller {
         }
       });
     });
+  }
+
+  @Post('/make-query-dump')
+  async makeQueryDump(@Res() res: expRes) {
+    // 저장할 쿼리
+    const queries = [
+      'SELECT * FROM users',
+      'SELECT * FROM products',
+      'SELECT * FROM orders WHERE status = "pending"',
+      'SELECT * FROM customers WHERE country = "USA"',
+    ];
+
+    // 저장할 파일 경로
+    const filePath =
+      'C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/sqldump.txt';
+
+    // 쿼리를 파일에 추가하는 함수
+    function saveQueryToFile(queries: string[], filePath: string) {
+      const promises = queries.map((query) => {
+        return new Promise<void>((resolve, reject) => {
+          appendFile(filePath, query + '\n', (err) => {
+            if (err) {
+              reject(
+                new BadRequestException(
+                  '쿼리를 파일에 저장하는 중 오류가 발생했습니다: ' +
+                    err.message,
+                ),
+              );
+            } else {
+              resolve();
+            }
+          });
+        });
+      });
+
+      Promise.all(promises)
+        .then(() => {
+          res
+            .status(HttpStatus.CREATED)
+            .send('쿼리가 파일에 성공적으로 저장되었습니다.');
+        })
+        .catch((error) => {
+          throw error; // HTTP 응답은 위에서 처리되므로 여기서는 예외만 다시 던집니다.
+        });
+    }
+
+    // 쿼리를 파일에 추가
+    saveQueryToFile(queries, filePath);
   }
 }
