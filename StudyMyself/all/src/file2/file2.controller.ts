@@ -22,9 +22,17 @@ import { Response as expRes } from 'express';
 import { Public } from 'src/auth/public.decorator';
 import { FileExistGuard } from './file-exist.guard';
 import { NoQueryGuard } from './no-query.guard';
-import { appendFile, createReadStream, createWriteStream, rename } from 'fs';
+import {
+  appendFile,
+  createReadStream,
+  createWriteStream,
+  readFileSync,
+  rename,
+  writeFileSync,
+} from 'fs';
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import * as archiver from 'archiver';
+import { createCipheriv, randomBytes } from 'crypto';
 @Controller('file2')
 @Public()
 export class File2Controller {
@@ -233,5 +241,41 @@ export class File2Controller {
 
     // 쿼리를 파일에 추가
     saveQueryToFile(queries, filePath);
+  }
+
+  @Post('/encrypt')
+  async encryptFile(@Res() res: expRes) {
+    try {
+      const inputFile =
+        'C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/sqldump.txt'; // 암호화할 파일 경로
+      const encryptedFile =
+        'C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/sqldumpcrypto.txt'; // 암호화된 파일 저장 경로
+      const algorithm = 'aes-256-cbc'; // 암호화 알고리즘
+      const key = randomBytes(32); // 암호화에 사용할 키
+
+      // 파일 읽기
+      const input = readFileSync(inputFile);
+
+      // 암호화 키 생성
+      const iv = randomBytes(16); // 16바이트(128비트) IV 생성
+
+      // 암호화
+      const cipher = createCipheriv(algorithm, Buffer.from(key), iv);
+      const encryptedData = Buffer.concat([
+        cipher.update(input),
+        cipher.final(),
+      ]);
+
+      // 암호화된 내용을 파일에 저장
+      writeFileSync(
+        encryptedFile,
+        iv.toString('hex') + encryptedData.toString('hex'),
+      );
+
+      // 암호화된 파일을 클라이언트에게 응답
+      res.status(200).sendFile(encryptedFile);
+    } catch (error) {
+      res.status(500).send('암호화 오류: ' + error.message);
+    }
   }
 }

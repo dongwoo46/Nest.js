@@ -1,0 +1,4 @@
+SELECT * FROM products
+SELECT * FROM users
+SELECT * FROM orders WHERE status = "pending"
+SELECT * FROM customers WHERE country = "USA"
