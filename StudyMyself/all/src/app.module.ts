@@ -11,6 +11,9 @@ import { databaseConfig } from './config/database.config';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { FileModule } from './file/file.module';
+import { File2Module } from './file2/file2.module';
+import { File2Controller } from './file2/file2.controller';
 
 @Module({
   imports: [
@@ -44,6 +47,8 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
       useFactory: async (configService: ConfigService) =>
         await databaseConfig(configService),
     }),
+    FileModule,
+    File2Module,
   ],
   controllers: [AppController],
   providers: [
