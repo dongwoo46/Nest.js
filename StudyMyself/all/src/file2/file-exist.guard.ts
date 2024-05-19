@@ -13,7 +13,7 @@ export class FileExistGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const filename = req.query.file;
-    const filepath = './static/upload';
+    const filepath = `C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/`;
 
     try {
       // 해당 경로에 있는 모든 파일을 가져옴
