@@ -15,6 +15,7 @@ import { FileModule } from './file/file.module';
 import { File2Module } from './file2/file2.module';
 import { File2Controller } from './file2/file2.controller';
 import { CaslModule } from './casl/casl.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { CaslModule } from './casl/casl.module';
     FileModule,
     File2Module,
     CaslModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
