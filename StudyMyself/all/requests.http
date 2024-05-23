@@ -7,8 +7,23 @@ Content-Type: application/json
   "password": "password",
   "nickname": "시월",
   "username": "qwa406@naver.com",
-  "role" : 1,
+  "role" : "admin",
+  "roleNumber" : 1,
   "ip": "1.1.1.1"
+}
+
+### 회원가입 유저 생성2
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "email": "zxa406@naver.com",
+  "password": "password",
+  "nickname": "은별",
+  "username": "zxa406@naver.com",
+  "role" : "user",
+  "roleNumber" : 2,
+  "ip": "2.2.2.2"
 }
 
 
@@ -17,7 +32,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "qwa406@naver.com",
+  "email": "zxa406@naver.com",
   "password": "password"
 }
 
@@ -30,7 +45,7 @@ POST http://localhost:3000/auth/refreshToken
 
 ### 모든 유저 정보 get
 GET http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5ODA5NywiZXhwIjoxNzE1OTk4Njk3fQ.FWttmyZcDqmOw-oJ3IXUlaPe4BYL0F29oXREEWy1X-E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inp4YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjIsImlhdCI6MTcxNjQ5MDMwMSwiZXhwIjoxNzE2NDkwOTAxfQ.h-HDphscAz1SGG1mcfTUotGibj6XJkj_SA4Ra9SzFM0
 
 
 ### report 생산

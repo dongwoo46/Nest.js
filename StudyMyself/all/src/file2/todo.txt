@@ -1,0 +1,53 @@
+import { createReadStream, createWriteStream, readFileSync, writeFileSync } from 'fs';
+import { createHash, createSign } from 'crypto';
+import { archive, Archiver } from 'archiver';
+import * as path from 'path';
+
+// 전자 서명 생성
+function createDigitalSignature(data: Buffer, privateKeyPath: string): string {
+    const privateKey = readFileSync(privateKeyPath, 'utf-8');
+    const sign = createSign('sha256');
+    sign.write(data);
+    sign.end();
+    const signature = sign.sign(privateKey, 'hex');
+    return signature;
+}
+
+// zip 파일에 전자 서명 추가
+async function addDigitalSignatureToZip(zipFilePath: string, privateKeyPath: string): Promise<void> {
+    // zip 파일 읽기
+    const data = readFileSync(zipFilePath);
+
+    // 전자 서명 생성
+    const signature = createDigitalSignature(data, privateKeyPath);
+
+    // 서명 파일 생성
+    const signatureFilePath = `${zipFilePath}.sig`;
+    writeFileSync(signatureFilePath, signature, 'utf-8');
+
+    console.log('전자 서명이 성공적으로 추가되었습니다.');
+}
+
+// 테스트용 zip 파일 생성
+async function createZipFile(inputFolderPath: string, outputFilePath: string): Promise<void> {
+    const output = createWriteStream(outputFilePath);
+    const archive: Archiver = archive('zip');
+
+    archive.pipe(output);
+    archive.directory(inputFolderPath, false);
+    await archive.finalize();
+
+    console.log('zip 파일이 생성되었습니다.');
+}
+
+// 테스트용 zip 파일 생성 후 전자 서명 추가
+async function test() {
+    const inputFolderPath = '테스트용 파일 폴더 경로';
+    const outputFilePath = '생성할 zip 파일 경로';
+    const privateKeyPath = '사용할 개인 키 파일 경로';
+
+    await createZipFile(inputFolderPath, outputFilePath);
+    await addDigitalSignatureToZip(outputFilePath, privateKeyPath);
+}
+
+test();

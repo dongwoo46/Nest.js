@@ -243,6 +243,7 @@ export class File2Controller {
     saveQueryToFile(queries, filePath);
   }
 
+  // 파일내용 암호화하기
   @Post('/encrypt')
   async encryptFile(@Res() res: expRes) {
     try {

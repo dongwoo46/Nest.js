@@ -1,3 +1,4 @@
+import { Role } from 'src/auth/roles/role.enum';
 import { Report } from 'src/reports/entities/report.entity';
 import {
   Column,
@@ -26,7 +27,10 @@ export class User {
   nickname: string;
 
   @Column()
-  role: number;
+  role: string;
+
+  @Column()
+  roleNumber: number;
 
   @Column({ nullable: true })
   ip: string;
