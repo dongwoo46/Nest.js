@@ -32,7 +32,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "zxa406@naver.com",
+  "email": "qwa406@naver.com",
   "password": "password"
 }
 
@@ -61,4 +61,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwN
 
 ### report보기
 GET  http://localhost:3000/reports
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjQ5OTkzMCwiZXhwIjoxNzE2NTAwNTMwfQ.0RT5Iy1HHc7NtlXvH33pefWDSYwLLVU71-SiT0D-5Lg
 

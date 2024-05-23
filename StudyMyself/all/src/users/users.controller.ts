@@ -38,8 +38,8 @@ export class UsersController {
 
   @Get()
   @Serialize(ResponseUserDto)
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(RolesGuard)
   findAll() {
     return this.usersService.getAllUsers();
   }

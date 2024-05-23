@@ -14,6 +14,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { FileModule } from './file/file.module';
 import { File2Module } from './file2/file2.module';
 import { File2Controller } from './file2/file2.controller';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { File2Controller } from './file2/file2.controller';
     }),
     FileModule,
     File2Module,
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [
