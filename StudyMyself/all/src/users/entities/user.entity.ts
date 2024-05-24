@@ -35,6 +35,9 @@ export class User {
   @Column({ nullable: true })
   ip: string;
 
+  @Column({ default: 0 })
+  active: number;
+
   @Column({ nullable: true })
   refreshToken: string;
 
