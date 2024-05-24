@@ -1,28 +1,53 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { DuplicateEmailException } from 'src/exceptions/duplicate_email.exception';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { randomBytes, scrypt as _scrypt } from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly winstonLogger: Logger,
   ) {}
   private readonly logger = new Logger(UsersService.name);
 
   async signUp(createUserDto: CreateUserDto) {
     const { email, password, nickname, ip, role } = createUserDto;
+    // 동일 이메일 찾기
     const userUsingEmail = await this.findOneByEmail(email);
+    // 동일 닉네임 찾기
     const userUsingNickname = await this.findOneByNickName(nickname);
     if (userUsingEmail || userUsingNickname) {
       throw new DuplicateEmailException();
     }
 
+    // 비밀번호 해시
+    // salt 생성
+    const salt = randomBytes(8).toString('hex');
+
+    // salt 와 password 이용 해시 만들기
+    const hash = (await scrypt(password, salt, 32)) as Buffer; // scrypt는 해시로 변환된 결과를 받게된다 이때ㅔ 해시를 몇글자로 할지 해시길이를 세번째 인자로 정한다. scrypt가 반환하는것이 Buffer
+
+    // 해시결과와 salt 합치기
+    const result = salt + '.' + hash.toString('hex');
+
     const user = this.usersRepository.create(createUserDto);
+    user.password = result;
     return this.usersRepository.save(user);
   }
 

@@ -6,34 +6,36 @@ import { utilities, WinstonModule } from 'nest-winston';
 const dirname =
   'C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile';
 
-const dailyOptions = (level: string) => {
-  return {
-    format: winston.format.combine(
-      winston.format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss',
-      }),
-      winston.format.printf(
-        (info) => `[${info.timestamp}] winston.${info.level}: ${info.message}`,
-      ),
-    ),
-    level,
-    datePattern: 'YYYY-MM-DD',
-    dirname: dirname + `/${level}`,
-    filename: `%DATE%.${level}.log`,
-    maxFiles: 30, //30일치 로그파일 저장
-    zippedArchive: true, // 로그가 쌓이면 압축하여 관리
-  };
-};
+// dailyOptions 함수 정의
+// winston 사용시 데이터의 출력시 json을 이용하는지 단순 message로 보내는지 하나로 통일 시켜야 파일이 저장된다.(보내는 객체가 json? or 단수 메시지냐)
+const dailyOptions = (level: string) => ({
+  level,
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss',
+    }),
+    // winston.format.printf(
+    //   (info) => `[${info.timestamp}] winston.${info.level}: ${info.message}`,
+    // ),
+    winston.format.json(),
+  ),
+  dirname: `${dirname}/${level}`,
+  filename: `%DATE%.${level}.log`,
+  datePattern: 'YYYY-MM-DD',
+  zippedArchive: true,
+  maxSize: '20m',
+  maxFiles: '14d',
+});
 
-// const levels = {
-//   error: 0,
-//   warn: 1,
-//   info: 2,
-//   http: 3,
-//   verbose: 4,
-//   debug: 5,
-//   silly: 6,
-// };
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  verbose: 4,
+  debug: 5,
+  silly: 6,
+};
 
 @Module({
   imports: [
@@ -49,21 +51,29 @@ const dailyOptions = (level: string) => {
               prettyPrint: true,
               colors: true,
             }),
+            winston.format.printf(
+              (info) =>
+                `[${info.timestamp}] [${info.level}] ${JSON.stringify(info)}`,
+            ),
             // winston.format.printf(
-            //   (info) =>
-            //     `[${info.timestamp}] [${info.level}] ${JSON.stringify(info)}`,
+            //   (info) => `[${info.timestamp}] [${info.level}] ${info.message}`,
             // ),
           ),
         }),
         new winstonDaily({
-          level: '6',
+          level: 'silly',
           format: winston.format.combine(
+            winston.format.colorize(),
             winston.format.timestamp({
               format: 'YYYY-MM-DD HH:mm:ss',
             }),
+            // winston.format.printf(
+            //   (info) =>
+            //     `[${info.timestamp}] winston.${info.level}: ${info.message}`,
+            // ),
             winston.format.printf(
               (info) =>
-                `[${info.timestamp}] winston.${info.level}: ${info.message}`,
+                `[${info.timestamp}] [${info.level}] ${JSON.stringify(info)}`,
             ),
           ),
           dirname: dirname,
@@ -73,7 +83,7 @@ const dailyOptions = (level: string) => {
           maxSize: '20m',
           maxFiles: '14d',
         }),
-        new winstonDaily(dailyOptions('warn')),
+        // new winstonDaily(dailyOptions('warn')),
         // new winstonDaily(dailyOptions('info')),
         // new winstonDaily(dailyOptions('error')),
       ],

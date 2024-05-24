@@ -24,10 +24,10 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   private readonly logger = new Logger(AuthController.name);
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   // @UseGuards(AuthGuard('local'))
   @Post('login')
-  @Public()
   async login(@Request() req, @Res() res: exRes) {
     return this.authService.signin(req, res);
   }
