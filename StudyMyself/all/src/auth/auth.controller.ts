@@ -48,6 +48,9 @@ export class AuthController {
     return { accessToken };
   }
 
+  @Public()
   @Post('logout')
-  async logout() {}
+  async logout(@Req() req: exReq, @Res() res: exRes) {
+    return this.authService.signout(req, res);
+  }
 }

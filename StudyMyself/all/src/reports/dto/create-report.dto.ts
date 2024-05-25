@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -21,6 +22,6 @@ export class CreateReportDto {
   level: number;
 
   @IsBoolean()
-  @IsNotEmpty()
-  isPublished: true;
+  @Transform(({ value }) => (value !== undefined ? value : true)) // 기본값 true로 설정
+  isPublished: boolean;
 }

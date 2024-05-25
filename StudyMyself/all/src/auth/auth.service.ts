@@ -2,6 +2,7 @@ import {
   BadRequestException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
   Req,
@@ -14,6 +15,8 @@ import { Request as exReq } from 'express';
 import { Response as exRes } from 'express';
 import { promisify } from 'util';
 import { scrypt as _scrypt, randomBytes } from 'crypto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 const scrypt = promisify(_scrypt);
 
@@ -22,6 +25,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async signin(@Request() req, @Res() res: exRes) {
@@ -29,13 +33,42 @@ export class AuthService {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      path: '/',
+      // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      path: '/',
     });
 
     //응답을 express 타입으로 불러왔기 때문에, 기존에 nest에서 하던대로 return으로 반환하는 것이 아닌, res.send로 반환
-    return res.send({ accessToken: accessToken });
+    return res.json({ accessToken: accessToken, refreshToken: refreshToken });
   }
 
+  //회원 로그아웃
+  async signout(@Request() req: exReq, @Res() res: exRes) {
+    const accessToken = req.cookies['accessToken'];
+    const refreshToken = req.cookies['refreshToken'];
+    if (!accessToken || !refreshToken) {
+      throw new BadRequestException('이미 로그아웃된 유저입니다.');
+    }
+    await this.addToBlacklist('accessTokenBlacklist', accessToken);
+    await this.addToBlacklist('refreshTokenBlacklist', refreshToken);
+
+    // 쿠키 삭제
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      path: '/',
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      path: '/',
+    });
+    return res.json({ message: '로그아웃 되었습니다.' });
+  }
+
+  // 유효한 user인지 비밀번호와 id 체크
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) {
@@ -51,6 +84,7 @@ export class AuthService {
     return user;
   }
 
+  // refresh, access 토큰 생성
   async generateToken(user: any) {
     const payload = { email: user.email, userId: user.userId };
 
@@ -77,5 +111,34 @@ export class AuthService {
     // 새로운 액세스 토큰 발급
     const accessToken = this.jwtService.sign({ userId: user.userId });
     return accessToken;
+  }
+
+  private async addToBlacklist(key: string, token: string): Promise<void> {
+    let blacklist = await this.cacheManager.get<string[]>(key);
+
+    if (!blacklist) {
+      blacklist = [];
+    }
+
+    blacklist.push(token);
+    await this.cacheManager.set(key, blacklist, 300000); // 7일 TTL 설정 (초 단위)
+  }
+
+  async isTokenBlacklisted(
+    token: string,
+    type: 'accessToken' | 'refreshToken',
+  ): Promise<string[]> {
+    const key =
+      type === 'accessToken' ? 'accessTokenBlacklist' : 'refreshTokenBlacklist';
+    const blacklist = (await this.cacheManager.get<string[]>(key)) || [];
+    return blacklist;
+  }
+
+  async checkCookieAccessToken(@Req() req: exReq): Promise<Boolean> {
+    const cookieAccessToken = req.cookies['accessToken'];
+    if (!cookieAccessToken) {
+      return false;
+    }
+    return cookieAccessToken;
   }
 }

@@ -38,28 +38,31 @@ Content-Type: application/json
 
 ### 인증 - AuthGuard
 GET http://localhost:3000/auth/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5Njk3NiwiZXhwIjoxNzE1OTk3NTc2fQ.m2lg6Tgwqu5j2KQMVATzZjJc5VeABAZ_whjy_GiYfIo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNTQ0MywiZXhwIjoxNzE2NjI2MDQzfQ.vKwdFSSIiCcpoVwR_ks5hDb5wAJRDojcgazrIzwrhjc
 
 ### refreshToken이용 발급
 POST http://localhost:3000/auth/refreshToken
 
 ### 모든 유저 정보 get
 GET http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inp4YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjIsImlhdCI6MTcxNjQ5MDMwMSwiZXhwIjoxNzE2NDkwOTAxfQ.h-HDphscAz1SGG1mcfTUotGibj6XJkj_SA4Ra9SzFM0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNDk5NywiZXhwIjoxNzE2NjI1NTk3fQ.CpnyiZzU2WngjWVmNn4XGGVjBkhzZ-RLbNhzOrJPaTk
 
 
 ### report 생산
 POST http://localhost:3000/reports
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNTk5ODI3OCwiZXhwIjoxNzE1OTk4ODc4fQ.gRAtrJVfUHvvSjjL5lDafHBUeWPDySuqsvAX0S4JXjs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNzkxOCwiZXhwIjoxNzE2NjI4NTE4fQ.Xb4y8derwQTrmB1GVwn8xXnHT3PVuBfsoBzLxVb_x18
 
 {
   "title":"나는 신이다",
   "content":"아 진자 졸라 힘들어 쉬고싶다. 자고싶다.....",
-  "level": 1
+  "level": 1,
+  "isPublished": true
 }
 
 ### report보기
 GET  http://localhost:3000/reports
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjQ5OTkzMCwiZXhwIjoxNzE2NTAwNTMwfQ.0RT5Iy1HHc7NtlXvH33pefWDSYwLLVU71-SiT0D-5Lg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNTExMSwiZXhwIjoxNzE2NjI1NzExfQ.LwkBNrYR3ezwxWpdrtqDKtqQljKZ87OVaRQHk6lOaSQ
 
+### 로그아웃
+POST http://localhost:3000/auth/logout

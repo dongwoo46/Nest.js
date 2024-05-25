@@ -3,6 +3,10 @@ import { AppModule } from './app.module';
 import { MyLoggerService } from './logger/my-logger.service';
 import { MyLogger } from './logger/my-logger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
+import * as passport from 'passport';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // 의존성 주입 사용 불가 단순히 클래스만 넣어주는 것
@@ -17,6 +21,14 @@ async function bootstrap() {
 
   //처음부터 윈스턴 로그 쓰기
   // app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  // Passport 초기화
+  app.use(passport.initialize());
+
+  // express-session 필요함
+  // app.use(passport.session());
+  app.use(cookieParser());
+
   await app.listen(3000);
 }
 bootstrap();

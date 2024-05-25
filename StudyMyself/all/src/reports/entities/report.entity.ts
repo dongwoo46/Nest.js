@@ -26,6 +26,6 @@ export class Report {
   @ManyToOne(() => User, (user) => user.reports)
   user: User;
 
-  @Column()
+  @Column({ default: true })
   isPublished: boolean;
 }
