@@ -28,22 +28,44 @@ export class AuthService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async signin(@Request() req, @Res() res: exRes) {
-    const { accessToken, refreshToken } = await this.generateToken(req.user);
+  async login(@Request() req, @Res() res: exRes) {
+    const accessToken = req.cookies['accessToken'];
+    const refreshToken = req.cookies['refreshToken'];
 
-    res.cookie('refreshToken', refreshToken, {
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      path: '/',
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      path: '/',
+    });
+
+    if (accessToken) {
+      await this.addToBlacklist('accessTokenBlacklist', accessToken);
+    }
+    if (refreshToken) {
+      await this.addToBlacklist('refreshTokenBlacklist', refreshToken);
+    }
+
+    const tokens = await this.generateToken(req.user);
+    const newAccessToken = tokens.accessToken;
+    const newRefreshToken = tokens.refreshToken;
+    res.cookie('accessToken', newAccessToken, {
+      httpOnly: true,
+      path: '/',
+    });
+    res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       path: '/',
       // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      path: '/',
-    });
-
     //응답을 express 타입으로 불러왔기 때문에, 기존에 nest에서 하던대로 return으로 반환하는 것이 아닌, res.send로 반환
-    return res.json({ accessToken: accessToken, refreshToken: refreshToken });
+    return res.json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
   }
 
   //회원 로그아웃
@@ -119,7 +141,9 @@ export class AuthService {
     if (!blacklist) {
       blacklist = [];
     }
-
+    if (blacklist.includes(token)) {
+      return;
+    }
     blacklist.push(token);
     await this.cacheManager.set(key, blacklist, 300000); // 7일 TTL 설정 (초 단위)
   }
