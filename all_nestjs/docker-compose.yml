@@ -1,0 +1,90 @@
+version: '3.9'
+
+services:
+  mariadb:
+    image: mariadb:lts
+    container_name: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: nestdb
+      MARIADB_USER: nestuser
+      MARIADB_PASSWORD: nestpassword
+    ports:
+      - '3306:3306'
+    # volumes:
+    # - mariadb-data:/var/lib/mysql
+    # - ./my.cnf:/etc/mysql/my.cnf
+    networks:
+      - my_network
+    # command: bash -c "chown mysql:mysql /etc/mysql/my.cnf && chmod 644 /etc/mysql/my.cnf && gosu mysql mysqld" # 파일 권한 수정 후 비루트 사용자로 MariaDB 실행
+
+  nestjs:
+    build:
+      context: ./nestjs
+      dockerfile: Dockerfile
+    container_name: nestjs
+    environment:
+      - DATABASE_HOST=mariadb
+      - DATABASE_PORT=3306
+      - DATABASE_USER=nestuser
+      - DATABASE_PASSWORD=nestpassword
+      - DATABASE_NAME=nestdb
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mariadb
+      - redis
+    networks:
+      - my_network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+    networks:
+      - my_network
+
+  grafana:
+    image: grafana/grafana:8.2.2
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini:ro
+      - grafana-data:/var/lib/grafana
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '8m'
+        max-file: '10'
+    depends_on:
+      - prometheus
+    networks:
+      - my_network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    networks:
+      - my_network
+
+volumes:
+  mariadb-data: {}
+  grafana-data: {}
+  redis-data: {}
+
+networks:
+  my_network:
+    driver: bridge

@@ -2,7 +2,7 @@ POST http://localhost:3000/articles
 Content-Type: application/json
 
 {
-  "title":"title444efe",
-  "context": "context326",
-  "name":"name66"
+  "title":"title",
+  "context": "context3",
+  "name":"name"
 }

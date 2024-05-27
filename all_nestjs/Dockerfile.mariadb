@@ -1,0 +1,10 @@
+# Dockerfile.mariadb
+FROM mariadb:11.3.2
+
+# my.cnf 파일을 컨테이너의 /etc/mysql/my.cnf 위치로 복사
+COPY my.cnf /etc/mysql/my.cnf
+
+# Entrypoint 스크립트를 사용해 MariaDB를 실행
+CMD ["mysqld"]
+
+# RUN apt-get update && apt-get install -y mysql-client && rm -rf /var/lib/apt/lists/*

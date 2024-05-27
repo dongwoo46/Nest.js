@@ -1,0 +1,68 @@
+### 회원가입 유저 생성
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "email": "qwa406@naver.com",
+  "password": "password",
+  "nickname": "시월",
+  "username": "qwa406@naver.com",
+  "role" : "admin",
+  "roleNumber" : 1,
+  "ip": "1.1.1.1"
+}
+
+### 회원가입 유저 생성2
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "email": "zxa406@naver.com",
+  "password": "password",
+  "nickname": "은별",
+  "username": "zxa406@naver.com",
+  "role" : "user",
+  "roleNumber" : 2,
+  "ip": "2.2.2.2"
+}
+
+
+### 로그인
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "qwa406@naver.com",
+  "password": "password"
+}
+
+### 인증 - AuthGuard
+GET http://localhost:3000/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNTQ0MywiZXhwIjoxNzE2NjI2MDQzfQ.vKwdFSSIiCcpoVwR_ks5hDb5wAJRDojcgazrIzwrhjc
+
+### refreshToken이용 발급
+POST http://localhost:3000/auth/refreshToken
+
+### 모든 유저 정보 get
+GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNDk5NywiZXhwIjoxNzE2NjI1NTk3fQ.CpnyiZzU2WngjWVmNn4XGGVjBkhzZ-RLbNhzOrJPaTk
+
+
+### report 생산
+POST http://localhost:3000/reports
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNzkxOCwiZXhwIjoxNzE2NjI4NTE4fQ.Xb4y8derwQTrmB1GVwn8xXnHT3PVuBfsoBzLxVb_x18
+
+{
+  "title":"나는 신이다",
+  "content":"아 진자 졸라 힘들어 쉬고싶다. 자고싶다.....",
+  "level": 1,
+  "isPublished": true
+}
+
+### report보기
+GET  http://localhost:3000/reports
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3YTQwNkBuYXZlci5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTcxNjYyNTExMSwiZXhwIjoxNzE2NjI1NzExfQ.LwkBNrYR3ezwxWpdrtqDKtqQljKZ87OVaRQHk6lOaSQ
+
+### 로그아웃
+POST http://localhost:3000/auth/logout
