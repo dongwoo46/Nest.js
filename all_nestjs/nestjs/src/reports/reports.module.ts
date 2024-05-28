@@ -10,5 +10,6 @@ import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.f
   imports: [TypeOrmModule.forFeature([Report]), UsersModule],
   controllers: [ReportsController],
   providers: [ReportsService, CaslAbilityFactory],
+  exports: [ReportsService],
 })
 export class ReportsModule {}

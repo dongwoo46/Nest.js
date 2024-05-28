@@ -17,7 +17,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { Response as expRes } from 'express';
 import { Public } from 'src/auth/public.decorator';
 import { FileExistGuard } from './file-exist.guard';
@@ -33,9 +32,14 @@ import {
 import { PDFDocument, StandardFonts } from 'pdf-lib';
 import * as archiver from 'archiver';
 import { createCipheriv, randomBytes } from 'crypto';
+import { ReportsService } from 'src/reports/reports.service';
+import * as fs from 'fs';
+import * as path from 'path';
+
 @Controller('file2')
 @Public()
 export class File2Controller {
+  constructor(private reportsService: ReportsService) {}
   @Post('/upload-single')
   @UseInterceptors(FileInterceptor('file')) //
   uploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -125,7 +129,10 @@ export class File2Controller {
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString(16))
             .join('');
-          return callback(null, `${randomName}${extname(file.originalname)}`);
+          return callback(
+            null,
+            `${randomName}${path.extname(file.originalname)}`,
+          );
         },
       }),
     }),
@@ -278,5 +285,112 @@ export class File2Controller {
     } catch (error) {
       res.status(500).send('암호화 오류: ' + error.message);
     }
+  }
+
+  // 데이터를 각각 파일로 만들어서 zip파일 만들기
+  @Get('/make-sql-data-file')
+  async makeDataFile(@Res() res: expRes) {
+    const reports = await this.reportsService.findAll();
+
+    // 프로젝트 루트 디렉토리에 files 디렉토리 생성
+    const filesDir = path.join(
+      'C:/Users/dw/Desktop/Nest.js/all_nestjs/nestjs/src/file2/sqlDataFile',
+    );
+    if (!fs.existsSync(filesDir)) {
+      fs.mkdirSync(filesDir, { recursive: true });
+    }
+
+    // 파일 생성
+    const filePaths = reports.map((report, index) => {
+      const filePath = path.join(filesDir, `report-${index + 1}.txt`);
+      fs.writeFileSync(filePath, JSON.stringify(report, null, 2), 'utf8');
+      return filePath;
+    });
+
+    // ZIP 파일 생성
+    const zipFilePath = path.join(filesDir, 'reports.zip');
+    const output = fs.createWriteStream(zipFilePath);
+    const archive = archiver('zip', {
+      zlib: { level: 9 }, // 압축 수준 설정
+    });
+
+    output.on('close', () => {
+      console.log(`ZIP 파일 크기: ${archive.pointer()} bytes`);
+      // 클라이언트에게 ZIP 파일 전송
+      res.download(zipFilePath, 'reports.zip', (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('ZIP 파일 다운로드 완료');
+        }
+      });
+    });
+
+    archive.on('error', (err) => {
+      throw err;
+    });
+
+    archive.pipe(output);
+
+    filePaths.forEach((filePath) => {
+      archive.file(filePath, { name: path.basename(filePath) });
+    });
+
+    await archive.finalize();
+  }
+
+  //각 데이터를 하나의 파일로 뭉쳐서 파일만들기
+  @Get('/make-sql-data-file-all-in')
+  async makeDataFileAllInOne(@Res() res: expRes) {
+    const reports = await this.reportsService.findAll();
+
+    // 프로젝트 루트 디렉토리에 files 디렉토리 생성
+    const filesDir = path.join(process.cwd(), 'files');
+    if (!fs.existsSync(filesDir)) {
+      fs.mkdirSync(filesDir, { recursive: true });
+    }
+
+    // sqlDataFile 디렉토리 경로
+    const sqlDataFileDir = path.join(
+      'C:/Users/dw/Desktop/Nest.js/all_nestjs/nestjs/src/file2',
+      'sqlDataFile',
+    );
+    if (!fs.existsSync(sqlDataFileDir)) {
+      fs.mkdirSync(sqlDataFileDir, { recursive: true });
+    }
+
+    // 모든 데이터를 하나의 파일에 저장
+    const dataFilePath = path.join(sqlDataFileDir, 'reports.txt');
+    fs.writeFileSync(dataFilePath, JSON.stringify(reports, null, 2), 'utf8');
+
+    // ZIP 파일 생성
+    const zipFilePath = path.join(sqlDataFileDir, 'reports.zip');
+    const output = fs.createWriteStream(zipFilePath);
+    const archive = archiver('zip', {
+      zlib: { level: 9 }, // 압축 수준 설정
+    });
+
+    output.on('close', () => {
+      console.log(`ZIP 파일 크기: ${archive.pointer()} bytes`);
+      // 클라이언트에게 ZIP 파일 전송
+      res.download(zipFilePath, 'reports.zip', (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('ZIP 파일 다운로드 완료');
+        }
+      });
+    });
+
+    archive.on('error', (err) => {
+      throw err;
+    });
+
+    archive.pipe(output);
+
+    // 데이터 파일을 ZIP 파일에 추가
+    archive.file(dataFilePath, { name: 'reports.txt' });
+
+    await archive.finalize();
   }
 }

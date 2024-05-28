@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ReportsModule } from '../reports/reports.module';
 @Module({
   imports: [
     MulterModule.registerAsync({
@@ -31,6 +32,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         }),
       }),
     }),
+    ReportsModule,
   ],
   controllers: [File2Controller],
 })
