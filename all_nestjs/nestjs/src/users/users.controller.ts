@@ -10,6 +10,7 @@ import {
   UseGuards,
   Inject,
   Sse,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,7 +28,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger as WinstonLogger } from 'winston';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { filter, fromEvent, map, Observable } from 'rxjs';
-
+import { Request as exReq } from 'express';
 @Controller('users')
 export class UsersController {
   constructor(
@@ -91,8 +92,15 @@ export class UsersController {
    */
   @Post('/sse-create-user')
   @Public()
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<any> {
-    const user = await this.usersService.signUp(createUserDto);
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+    @Req() req: exReq,
+  ): Promise<any> {
+    const userIp = req.ip;
+    const user = await this.usersService.signUp({
+      ...createUserDto,
+      ip: userIp,
+    });
     this.eventEmitter.emit('create-user', user); // 생성된 유저 객체를 이벤트로 전송
     return user;
   }
