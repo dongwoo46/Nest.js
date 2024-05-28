@@ -17,6 +17,8 @@ import { File2Controller } from './file2/file2.controller';
 import { CaslModule } from './casl/casl.module';
 import { LoggerModule } from './logger/logger.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SseModule } from './sse/sse.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -59,6 +61,8 @@ import { CacheModule } from '@nestjs/cache-manager';
       max: 10, // 캐시에 담길 최대 데이터 개수
       isGlobal: true, // 캐시모듈을 전역설정
     }),
+    SseModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [
