@@ -11,8 +11,8 @@ services:
       MARIADB_PASSWORD: nestpassword
     ports:
       - '3306:3306'
-    # volumes:
-    # - mariadb-data:/var/lib/mysql
+    volumes:
+      - mariadb-data:/var/lib/mysql
     # - ./my.cnf:/etc/mysql/my.cnf
     networks:
       - my_network
@@ -35,6 +35,8 @@ services:
       - '3000:3000'
     depends_on:
       - mariadb
+      # - postgres
+      #     - mongodb
       - redis
     networks:
       - my_network
@@ -67,6 +69,7 @@ services:
         max-file: '10'
     depends_on:
       - prometheus
+
     networks:
       - my_network
 
@@ -80,10 +83,53 @@ services:
     networks:
       - my_network
 
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - '9091:9091'
+    environment:
+      - JENKINS_OPTS=--httpPort=9091
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - my_network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    networks:
+      - my_network
+
 volumes:
   mariadb-data: {}
   grafana-data: {}
   redis-data: {}
+  jenkins-data: {}
+  #   mongodb-data: {}
+  postgres-data: {}
 
 networks:
   my_network:

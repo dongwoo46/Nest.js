@@ -52,6 +52,16 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       useFactory: async (configService: ConfigService) =>
         await databaseConfig(configService),
     }),
+    // TypeOrmModule.forRoot({
+    //   type: 'postgres',
+    //   host: 'postgres',
+    //   port: 5432,
+    //   username: 'postgres',
+    //   password: '1234',
+    //   database: 'postgres',
+    //   entities: [__dirname + '/../**/*.entity.{js,ts}'],
+    //   synchronize: true,
+    // }),
     FileModule,
     File2Module,
     CaslModule,

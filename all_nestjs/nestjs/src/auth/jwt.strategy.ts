@@ -48,6 +48,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('로그인된 사용자가 아닙니다.');
     }
 
+    if (cookieAccessToken !== token) {
+      throw new UnauthorizedException('사용할 수 없는 토큰입니다.');
+    }
+
     if (isBlacklisted.includes(token)) {
       throw new UnauthorizedException('사용 불가능한 토큰입니다.');
     }
