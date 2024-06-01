@@ -19,6 +19,9 @@ import { LoggerModule } from './logger/logger.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SseModule } from './sse/sse.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EccSignModule } from './ecc-sign/ecc-sign.module';
+import { RsaSignModule } from './rsa-sign/rsa-sign.module';
+import { CryptoSignModule } from './crypto-sign/crypto-sign.module';
 
 @Module({
   imports: [
@@ -63,6 +66,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     SseModule,
     EventEmitterModule.forRoot(),
+    EccSignModule,
+    RsaSignModule,
+    CryptoSignModule,
   ],
   controllers: [AppController],
   providers: [
