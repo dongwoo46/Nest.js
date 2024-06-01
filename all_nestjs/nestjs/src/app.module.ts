@@ -22,7 +22,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EccSignModule } from './ecc-sign/ecc-sign.module';
 import { RsaSignModule } from './rsa-sign/rsa-sign.module';
 import { CryptoSignModule } from './crypto-sign/crypto-sign.module';
-
+import * as redisStore from 'cache-manager-redis-store';
 @Module({
   imports: [
     UsersModule,
@@ -59,11 +59,23 @@ import { CryptoSignModule } from './crypto-sign/crypto-sign.module';
     File2Module,
     CaslModule,
     LoggerModule,
+    // 단순 캐시만 사용할때
+    // CacheModule.register({
+    //   ttl: 100000, // 시간(밀리초)
+    //   max: 10, // 캐시에 담길 최대 데이터 개수
+    //   isGlobal: true, // 캐시모듈을 전역설정
+    // }),
+
+    //Redis 사용 - npm i chache-manger-redis-store
     CacheModule.register({
-      ttl: 100000, // 시간(밀리초)
-      max: 10, // 캐시에 담길 최대 데이터 개수
-      isGlobal: true, // 캐시모듈을 전역설정
+      max: 100,
+      ttl: 0,
+      isGlobal: true,
+      store: redisStore,
+      host: 'localhost',
+      port: 6379,
     }),
+
     SseModule,
     EventEmitterModule.forRoot(),
     EccSignModule,

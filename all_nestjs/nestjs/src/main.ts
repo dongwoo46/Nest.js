@@ -15,6 +15,7 @@ async function bootstrap() {
     // 사용자 정의 로그가 첨부될때까지 기다리는 것 처음부터 사용자정의 로거 사용
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   });
+
   // nest에서 사용할 로거의 인스턴스를 주입(싱글톤) ->
   // 다른곳에서   private readonly logger = new Logger(MyService.name); 이렇게 써줘야함
   // app.useLogger(app.get(MyLogger));
