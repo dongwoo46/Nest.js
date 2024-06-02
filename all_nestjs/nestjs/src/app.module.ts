@@ -23,6 +23,8 @@ import { EccSignModule } from './ecc-sign/ecc-sign.module';
 import { RsaSignModule } from './rsa-sign/rsa-sign.module';
 import { CryptoSignModule } from './crypto-sign/crypto-sign.module';
 import * as redisStore from 'cache-manager-redis-store';
+import { ChatModule } from './chat/chat.module';
+import { ChatGateway } from './chat/chat.gateway';
 @Module({
   imports: [
     UsersModule,
@@ -81,6 +83,7 @@ import * as redisStore from 'cache-manager-redis-store';
     EccSignModule,
     RsaSignModule,
     CryptoSignModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [
