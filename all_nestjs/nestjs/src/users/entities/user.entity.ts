@@ -1,4 +1,5 @@
 import { Role } from 'src/auth/roles/role.enum';
+import { Message } from 'src/messages/entities/message.entity';
 import { Report } from 'src/reports/entities/report.entity';
 import {
   Column,

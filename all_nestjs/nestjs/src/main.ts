@@ -6,6 +6,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import { EventsGateway } from './events/events.gateway';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -29,7 +30,14 @@ async function bootstrap() {
   // express-session 필요함
   // app.use(passport.session());
   app.use(cookieParser());
+  app.enableCors({
+    origin: 'http://127.0.0.1:5500', // 정확한 출처를 명시
+    credentials: true, // 쿠키를 포함한 요청을 허용
+  });
 
+  // 2초마다 메시지 보내는 것
+  // const eventGateway = app.get(EventsGateway);
+  // setInterval(() => eventGateway.sendMessage(), 2000);
   await app.listen(3000);
 }
 bootstrap();

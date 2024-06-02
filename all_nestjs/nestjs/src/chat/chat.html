@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat Room</title>
+  </head>
+  <body>
+    <h2>Chat Room</h2>
+    <div id="chatRooms">
+      <h3>Available Rooms</h3>
+      <ul id="roomList"></ul>
+    </div>
+    <form id="createRoomForm">
+      <label for="roomName">Room Name:</label>
+      <input type="text" id="roomName" name="roomName" required />
+      <button type="submit">Create Room</button>
+    </form>
+
+    <div id="chatContainer" style="display: none">
+      <h3 id="roomTitle"></h3>
+      <ul id="messages"></ul>
+      <form id="messageForm">
+        <input type="text" id="message" autocomplete="off" required />
+        <button>Send</button>
+      </form>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'login.html';
+      }
+
+      const socket = io({
+        extraHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        fetchRooms();
+      });
+
+      async function fetchRooms() {
+        const response = await fetch('/chat/rooms', {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const rooms = await response.json();
+        const roomList = document.getElementById('roomList');
+        rooms.forEach((room) => {
+          const listItem = document.createElement('li');
+          listItem.textContent = room.name;
+          listItem.addEventListener('click', () =>
+            joinRoom(room.id, room.name),
+          );
+          roomList.appendChild(listItem);
+        });
+      }
+
+      document
+        .getElementById('createRoomForm')
+        .addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const roomName = document.getElementById('roomName').value;
+
+          socket.emit('createRoom', { name: roomName }, (room) => {
+            if (room) {
+              joinRoom(room.id, room.name);
+            }
+          });
+        });
+
+      function joinRoom(roomId, roomName) {
+        socket.emit('joinRoom', { roomId }, (room) => {
+          if (room) {
+            document.getElementById('chatContainer').style.display = 'block';
+            document.getElementById('roomTitle').textContent = roomName;
+            document.getElementById('messages').innerHTML = '';
+            room.messages.forEach((message) => addMessageToList(message));
+          }
+        });
+      }
+
+      document
+        .getElementById('messageForm')
+        .addEventListener('submit', (event) => {
+          event.preventDefault();
+          const messageInput = document.getElementById('message');
+          const message = messageInput.value;
+          const roomId = document
+            .getElementById('roomTitle')
+            .getAttribute('data-room-id');
+
+          socket.emit('message', { roomId, message }, (chatMessage) => {
+            if (chatMessage) {
+              addMessageToList(chatMessage);
+              messageInput.value = '';
+            }
+          });
+        });
+
+      function addMessageToList(message) {
+        const messageList = document.getElementById('messages');
+        const listItem = document.createElement('li');
+        listItem.textContent = `${message.userId}: ${message.message}`;
+        messageList.appendChild(listItem);
+      }
+    </script>
+  </body>
+</html>

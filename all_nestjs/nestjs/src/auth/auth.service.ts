@@ -121,7 +121,7 @@ export class AuthService {
       refreshToken,
     };
   }
-
+  // RefreshToken 이용해 accessToken 발급
   async makeAccessTokenUsingRereshToken(
     refreshToken: string,
   ): Promise<string | null> {

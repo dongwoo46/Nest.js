@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Web socket test</title>
+    <style>
+      #messages {
+        height: 300px;
+        overflow-y: scroll;
+      }
+
+      #app {
+        margin-top: 2rem;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.socket.io/socket.io-1.4.5.js"
+    ></script>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="row">
+        <div class="col-md-6 offset-md-3 col-sm-12">
+          <h1 class="text-center">{{ title }}</h1>
+          <br />
+          <div id="status"></div>
+          <div id="chat">
+            <input
+              type="text"
+              v-model="name"
+              id="username"
+              class="form-control"
+              placeholder="Enter name..."
+            />
+            <br />
+            <div class="card">
+              <div id="messages" class="card-block">
+                <ul>
+                  <li v-for="message of messages">
+                    {{ message.senderId }}: {{ message.text }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <br />
+            <textarea
+              id="textarea"
+              class="form-control"
+              v-model="text"
+              placeholder="Enter message..."
+            ></textarea>
+            <br />
+            <button id="send" class="btn" @click.prevent="sendMessage">
+              Send
+            </button>
+            <button @click.prevent="joinRoom">
+              Join room
+            </button>
+            <button @click.prevent="leaveRoom">
+              Leave room
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const app = new Vue({
+        el: '#app',
+        data: {
+          title: 'Nestjs Websockets Chat',
+          name: '',
+          text: '',
+          messages: [],
+          socket: null,
+        },
+        methods: {
+          joinRoom() {
+            this.socket.emit('joinRoom', { chatId: 1 });
+          },
+          leaveRoom() {
+            this.socket.emit('leaveRoom', { chatId: 1 });
+          },
+          sendMessage() {
+            if (this.validateInput()) {
+              const message = {
+                text: this.text,
+                chatId: 1,
+              };
+              this.socket.emit('messageToServer', message);
+              this.text = '';
+            }
+          },
+          receivedMessage(message) {
+            this.messages.push(message);
+          },
+          initializeMessages(messages) {
+            this.messages = [...messages];
+          },
+          clearMessages() {
+            this.messages = [];
+          },
+          validateInput() {
+            return this.name.length > 0 && this.text.length > 0;
+          },
+        },
+        created() {
+          const socketOptions = {
+            query: {
+              bearerToken:
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImthZmkiLCJpYXQiOjE1OTMzNDA5MzQsImV4cCI6MTU5MzM0NDUzNH0.WgBbM5mvLrcJ2buMVXKyaQUEgGel0JFYp7lgQnZzaGE', //'Bearer h93t4293t49jt34j9rferek...'
+            },
+          };
+
+          this.socket = io('http://localhost:3000', socketOptions);
+          this.socket.on('messageToClient', message => {
+            console.log({ message });
+            this.receivedMessage(message);
+          });
+
+          this.socket.on('joinRoom', chat => {
+            console.log({ chat });
+            this.initializeMessages(chat?.messages);
+          });
+
+          this.socket.on('leaveRoom', response => {
+            console.log({ response });
+            this.clearMessages();
+          });
+        },
+      });
+    </script>
+  </body>
+</html>

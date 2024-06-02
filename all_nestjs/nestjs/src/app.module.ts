@@ -24,7 +24,10 @@ import { RsaSignModule } from './rsa-sign/rsa-sign.module';
 import { CryptoSignModule } from './crypto-sign/crypto-sign.module';
 import * as redisStore from 'cache-manager-redis-store';
 import { ChatModule } from './chat/chat.module';
-import { ChatGateway } from './chat/chat.gateway';
+// import { ChatGateway } from './chat/chat.gateway';
+import { EventsModule } from './events/events.module';
+import { MessagesModule } from './messages/messages.module';
+import { WsJwtGuard } from './events/ws-jwt/ws-jwt.guard';
 @Module({
   imports: [
     UsersModule,
@@ -84,6 +87,8 @@ import { ChatGateway } from './chat/chat.gateway';
     RsaSignModule,
     CryptoSignModule,
     ChatModule,
+    EventsModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [
