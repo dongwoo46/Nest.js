@@ -6,21 +6,36 @@ import {
   Param,
   Delete,
   Patch,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
+import { CreateChatDto } from './dto/create-chat.dto';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from 'src/users/entities/user.entity';
+import { Public } from 'src/auth/public.decorator';
+import { Chat } from './entities/chat.entity';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Post()
-  create(@Body() createChatDto: any) {
-    return this.chatService.create(createChatDto);
+  @Post('/create')
+  create(@Body() createChatDto: CreateChatDto, @GetUser() user: User) {
+    return this.chatService.createChat(createChatDto, user);
   }
 
+  @Post('/join/:chatId')
+  async joinChat(
+    @Param('chatId', ParseIntPipe) chatId: number,
+    @GetUser() user: User,
+  ): Promise<Chat> {
+    return this.chatService.joinChat(chatId, user);
+  }
+
+  @Public()
   @Get()
-  findAll() {
-    return this.chatService.findAll();
+  findAllChat() {
+    return this.chatService.findAllChat();
   }
 
   @Get(':id')

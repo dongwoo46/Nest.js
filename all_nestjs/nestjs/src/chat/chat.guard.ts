@@ -1,28 +1,39 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { verify } from 'jsonwebtoken';
 import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
+import { jwtConstants } from 'src/auth/constants';
 
 @Injectable()
 export class ChatGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
-
+  private readonly logger = new Logger(ChatGuard.name);
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const client: Socket = context.switchToWs().getClient<Socket>();
-    const token = client.handshake.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-      return false;
-    }
-
-    try {
-      const decoded = this.jwtService.verify(token);
-      client['user'] = decoded;
+    if (context.getType() !== 'ws') {
       return true;
-    } catch (error) {
-      return false;
     }
+
+    const client: Socket = context.switchToWs().getClient();
+    const { authorization } = client.handshake.headers;
+    this.logger.log({ authorization }, 'i got the auth');
+    ChatGuard.validateToken(client);
+
+    return false;
+  }
+
+  static validateToken(client: Socket) {
+    const { authorization } = client.handshake.headers;
+    console.log(authorization);
+    const token: string = authorization.split(' ')[1];
+    const payload = verify(token, jwtConstants.secret);
+    console.log(payload);
+    return payload;
   }
 }

@@ -104,4 +104,13 @@ export class UsersService {
     }
     throw new HttpException('토큰 불일치', HttpStatus.UNAUTHORIZED);
   }
+  async getPartialUser(
+    userId: number,
+  ): Promise<Pick<User, 'userId' | 'username' | 'email'>> {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .select(['user.userId', 'user.username', 'user.email'])
+      .where('user.userId = :userId', { userId })
+      .getOne();
+  }
 }

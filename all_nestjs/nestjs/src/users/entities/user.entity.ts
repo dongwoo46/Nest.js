@@ -1,9 +1,13 @@
 import { Role } from 'src/auth/roles/role.enum';
+import { Chat } from 'src/chat/entities/chat.entity';
+import { ChatMessage } from 'src/chat/entities/chatMessage.entity';
 import { Message } from 'src/messages/entities/message.entity';
 import { Report } from 'src/reports/entities/report.entity';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryColumn,
@@ -41,4 +45,10 @@ export class User {
 
   @OneToMany(() => Report, (report) => report.user)
   reports: Report[];
+
+  @OneToMany(() => ChatMessage, (chatMessage) => chatMessage.user)
+  chatMessages: ChatMessage[];
+
+  @ManyToMany(() => Chat, (chat) => chat.users)
+  chats: Chat[];
 }

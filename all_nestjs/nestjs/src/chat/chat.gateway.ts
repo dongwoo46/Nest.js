@@ -15,8 +15,13 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { ChatGuard } from './chat.guard';
+import { WsGuard } from './ws.guard';
+import { UsersService } from 'src/users/users.service';
+import { SocketAuthMiddleware } from 'src/events/ws-jwt/ws.ms';
+import { SocketAuthMiddleware2 } from './ws.middleware';
 
-@WebSocketGateway()
+@UseGuards(WsGuard)
+@WebSocketGateway({ namespace: 'chat' })
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -25,9 +30,11 @@ export class ChatGateway
   constructor(
     private chatService: ChatService,
     private jwtService: JwtService,
+    private usersSwervice: UsersService,
   ) {}
 
-  afterInit(server: Server) {
+  afterInit(client: Socket) {
+    client.use(SocketAuthMiddleware2() as any);
     console.log('Initialized');
   }
 
@@ -39,21 +46,27 @@ export class ChatGateway
     console.log('Client disconnected:', client.id);
   }
 
-  @UseGuards(ChatGuard)
-  @SubscribeMessage('createRoom')
-  handleCreateRoom(
+  @SubscribeMessage('createChat')
+  async handleCreateChat(
     @MessageBody() data: { name: string },
     @ConnectedSocket() client: Socket,
   ) {
-    const room = this.chatService.createRoom(data.name);
-    client.join(room.id);
-    this.server.to(room.id).emit('roomCreated', room);
-    return room;
+    const token = client.handshake.headers.authorization.split(' ')[1];
+    const decoded = this.jwtService.verify(token);
+    const user = await this.usersSwervice.findOneById(decoded.userId); // 사용자 정보 가져오기
+    console.log('createChat gateway');
+    console.log(token);
+    console.log(user);
+    const createChatDto = { name: data.name };
+    const chat = await this.chatService.createChat(createChatDto, user);
+
+    client.join(chat.chatId.toString());
+    this.server.to(chat.chatId.toString()).emit('Chat Created', chat);
+    return chat;
   }
 
-  @UseGuards(ChatGuard)
-  @SubscribeMessage('joinRoom')
-  handleJoinRoom(
+  @SubscribeMessage('joinChat')
+  handleJoinChat(
     @MessageBody() data: { roomId: string },
     @ConnectedSocket() client: Socket,
   ) {
@@ -68,7 +81,6 @@ export class ChatGateway
     return { error: 'Room not found' };
   }
 
-  @UseGuards(ChatGuard)
   @SubscribeMessage('message')
   handleMessage(
     @MessageBody() data: { roomId: string; message: string },
