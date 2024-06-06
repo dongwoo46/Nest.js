@@ -6,7 +6,7 @@ import { Cache } from 'cache-manager';
 export class RedisService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  async setCacheKey(key: string, value: string): Promise<void> {
+  async setCacheKey<T>(key: string, value: T): Promise<void> {
     await this.cacheManager.set(key, value);
   }
 

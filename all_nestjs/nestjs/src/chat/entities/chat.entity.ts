@@ -22,7 +22,8 @@ export class Chat {
   @OneToMany(() => ChatMessage, (message) => message.chat)
   chatMessages: ChatMessage[];
 
-  @OneToMany(() => User, (user) => user.chats)
+  @ManyToMany(() => User, (user) => user.chats)
+  @JoinTable() // 관계를 정의하고 조인 테이블을 생성
   users: User[];
 
   @CreateDateColumn()

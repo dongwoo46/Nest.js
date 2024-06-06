@@ -23,17 +23,18 @@ export class ChatGuard implements CanActivate {
     const client: Socket = context.switchToWs().getClient();
     const { authorization } = client.handshake.headers;
     this.logger.log({ authorization }, 'i got the auth');
-    ChatGuard.validateToken(client);
-
+    const payload = ChatGuard.validateToken(client);
+    if (payload) {
+      return true;
+    }
     return false;
   }
 
   static validateToken(client: Socket) {
     const { authorization } = client.handshake.headers;
-    console.log(authorization);
     const token: string = authorization.split(' ')[1];
     const payload = verify(token, jwtConstants.secret);
-    console.log(payload);
+    client['user'] = payload;
     return payload;
   }
 }

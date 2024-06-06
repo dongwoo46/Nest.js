@@ -11,11 +11,12 @@ import { CacheModule } from '@nestjs/cache-manager';
       store: redisStore,
       host: 'localhost',
       port: 6379,
-      ttl: 60, // seconds
-      max: 10, // maximum number of items in cache
+      ttl: 60 * 60 * 24, // seconds
+      max: 100, // maximum number of items in cache
     }),
   ],
   providers: [RedisService],
   controllers: [RedisController],
+  exports: [RedisService],
 })
 export class RedisModule {}

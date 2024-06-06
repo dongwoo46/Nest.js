@@ -18,32 +18,32 @@ services:
       - my_network
     # command: bash -c "chown mysql:mysql /etc/mysql/my.cnf && chmod 644 /etc/mysql/my.cnf && gosu mysql mysqld" # 파일 권한 수정 후 비루트 사용자로 MariaDB 실행
 
-  nestjs:
-    build:
-      context: ./nestjs
-      dockerfile: Dockerfile
-    container_name: nestjs
-    environment:
-      - DATABASE_HOST=mariadb
-      - DATABASE_PORT=3306
-      - DATABASE_USER=nestuser
-      - DATABASE_PASSWORD=nestpassword
-      - DATABASE_NAME=nestdb
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    ports:
-      - '3000:3000'
-    depends_on:
-      - mariadb
-      - redis
-    networks:
-      - my_network
+  # nestjs:
+  #   build:
+  #     context: ./nestjs
+  #     dockerfile: Dockerfile
+  #   container_name: nestjs
+  #   environment:
+  #     - DATABASE_HOST=mariadb
+  #     - DATABASE_PORT=3306
+  #     - DATABASE_USER=nestuser
+  #     - DATABASE_PASSWORD=nestpassword
+  #     - DATABASE_NAME=nestdb
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - mariadb
+  #     - redis
+  #   networks:
+  #     - my_network
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    # volumes:
+    #   - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - '9090:9090'
     networks:
@@ -57,9 +57,9 @@ services:
       - GF_INSTALL_PLUGINS=grafana-clock-panel
     ports:
       - '3001:3001'
-    volumes:
-      - ./grafana.ini:/etc/grafana/grafana.ini:ro
-      - grafana-data:/var/lib/grafana
+    # volumes:
+    #   - ./grafana.ini:/etc/grafana/grafana.ini:ro
+    #   - grafana-data:/var/lib/grafana
     logging:
       driver: 'json-file'
       options:
@@ -75,15 +75,15 @@ services:
     container_name: redis
     ports:
       - '6379:6379'
-    volumes:
-      - redis-data:/data
+    # volumes:
+    #   - redis-data:/data
     networks:
       - my_network
 
-volumes:
-  mariadb-data: {}
-  grafana-data: {}
-  redis-data: {}
+# volumes:
+#   mariadb-data: {}
+#   grafana-data: {}
+#   redis-data: {}
 
 networks:
   my_network:

@@ -28,6 +28,7 @@ import { ChatModule } from './chat/chat.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { WsJwtGuard } from './events/ws-jwt/ws-jwt.guard';
+import { ChatEventsModule } from './chat-events/chat-events.module';
 @Module({
   imports: [
     UsersModule,
@@ -89,6 +90,7 @@ import { WsJwtGuard } from './events/ws-jwt/ws-jwt.guard';
     ChatModule,
     EventsModule,
     MessagesModule,
+    ChatEventsModule,
   ],
   controllers: [AppController],
   providers: [

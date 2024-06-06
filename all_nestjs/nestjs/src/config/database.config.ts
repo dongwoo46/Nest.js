@@ -18,7 +18,7 @@ export const databaseConfig = async (
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
     // logging: true,
-    dropSchema: true,
+    dropSchema: false,
   };
 };
 // export default registerAs('database', () => ({
