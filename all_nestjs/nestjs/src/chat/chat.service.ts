@@ -45,50 +45,63 @@ export class ChatService {
 
   async joinChat(name: string, user: User): Promise<Chat> {
     const chat = await this.findChatByName(name);
+    try {
+      if (!chat) {
+        throw new NotFoundException('Chat not found');
+      }
 
-    if (!chat) {
-      throw new NotFoundException('Chat not found');
+      if (!chat.users.some((u) => u.userId === user.userId)) {
+        chat.users.push(user);
+        await this.chatRepository.save(chat);
+      }
+
+      return chat;
+    } catch (error) {
+      console.error(`Error joining chat: ${error.message}`, {
+        chatName: name,
+        userId: user.userId,
+      });
+      throw error;
     }
-
-    if (!chat.users.some((u) => u.userId === user.userId)) {
-      chat.users.push(user);
-      await this.chatRepository.save(chat);
-    } else {
-      throw new BadRequestException('User is already a member of the chat');
-    }
-
-    return chat;
   }
 
   async leaveChat(name: string, user: User): Promise<Chat> {
     const chat = await this.findChatByName(name);
+    try {
+      if (!chat) {
+        throw new NotFoundException('채팅방을 찾을 수 없습니다.');
+      }
+      if (!user) {
+        throw new NotFoundException('사용자를 찾을 수 없습니다.');
+      }
 
-    if (!chat) {
-      throw new NotFoundException('채팅방을 찾을 수 없습니다.');
+      // 유저가 이미 채팅방에 없는 경우 에러 던지기
+      const userExists = chat.users.some((u) => u.userId === user.userId);
+      if (!userExists) {
+        throw new BadRequestException('유저가 이미 채팅방을 나간 상태입니다.');
+      }
+
+      chat.users = chat.users.filter((u) => u.userId !== user.userId);
+      await this.chatRepository.save(chat);
+
+      console.log(chat);
+    } catch (err) {
+      console.log(err);
+      throw err; // 에러 다시 던지기
     }
-    if (!user) {
-      throw new NotFoundException('사용자를 찾을 수 없습니다.');
-    }
 
-    chat.users = chat.users.filter((u) => u.userId !== user.userId);
-
-    await this.chatRepository.save(chat);
     return chat;
   }
 
-  async createChatMessage(
-    chatId: number,
-    user: User,
-    message: ChatMessage,
-  ): Promise<ChatMessage> {
-    const chat = await this.findChatById(chatId);
-    const chatMessage = this.chatMessagesRepository.create(message);
-    chatMessage.chat = chat;
-    chatMessage.user = user;
+  async createChatMessage(name: string, user: User, message: string) {
+    const chat = await this.findChatByName(name);
+    // const chatMessage = this.chatMessagesRepository.create(message);
+    // chatMessage.chat = chat;
+    // chatMessage.user = user;
 
-    this.chatMessagesRepository.save(chatMessage);
-    this.redisService.setCacheKey('message', chatMessage);
-    return chatMessage;
+    // this.chatMessagesRepository.save(chatMessage);
+    this.redisService.setCacheKey('message', message);
+    return message;
   }
 
   findAllChat() {
