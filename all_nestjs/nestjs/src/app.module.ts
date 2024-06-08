@@ -29,6 +29,7 @@ import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { WsJwtGuard } from './events/ws-jwt/ws-jwt.guard';
 import { ChatEventsModule } from './chat-events/chat-events.module';
+import { SslModule } from './ssl/ssl.module';
 @Module({
   imports: [
     UsersModule,
@@ -91,6 +92,7 @@ import { ChatEventsModule } from './chat-events/chat-events.module';
     EventsModule,
     MessagesModule,
     ChatEventsModule,
+    SslModule,
   ],
   controllers: [AppController],
   providers: [
