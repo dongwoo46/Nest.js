@@ -111,7 +111,7 @@ export class AuthService {
     const payload = { email: user.email, userId: user.userId };
 
     // 액세스 토큰 및 리프레시 토큰 생성
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '10m' });
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '60m' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     await this.usersService.saveRefreshToken(user.userId, refreshToken);

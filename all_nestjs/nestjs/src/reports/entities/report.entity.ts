@@ -8,6 +8,7 @@ import {
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class Report {
@@ -28,4 +29,7 @@ export class Report {
 
   @Column({ default: true })
   isPublished: boolean;
+
+  @OneToMany(() => Comment, (comment) => comment.report)
+  comments: Comment[];
 }

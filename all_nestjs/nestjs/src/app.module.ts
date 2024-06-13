@@ -30,6 +30,8 @@ import { MessagesModule } from './messages/messages.module';
 import { WsJwtGuard } from './events/ws-jwt/ws-jwt.guard';
 import { ChatEventsModule } from './chat-events/chat-events.module';
 import { SslModule } from './ssl/ssl.module';
+import { CommentsModule } from './comments/comments.module';
+import { ReplyModule } from './reply/reply.module';
 @Module({
   imports: [
     UsersModule,
@@ -93,6 +95,8 @@ import { SslModule } from './ssl/ssl.module';
     MessagesModule,
     ChatEventsModule,
     SslModule,
+    CommentsModule,
+    ReplyModule,
   ],
   controllers: [AppController],
   providers: [

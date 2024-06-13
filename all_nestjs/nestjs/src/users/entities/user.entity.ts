@@ -2,6 +2,7 @@ import { Role } from 'src/auth/roles/role.enum';
 import { Chat } from 'src/chat/entities/chat.entity';
 import { ChatMessage } from 'src/chat/entities/chatMessage.entity';
 import { Message } from 'src/messages/entities/message.entity';
+import { Reply } from 'src/reply/entities/reply.entity';
 import { Report } from 'src/reports/entities/report.entity';
 import {
   Column,
@@ -13,6 +14,7 @@ import {
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Entity()
 export class User {
@@ -51,4 +53,10 @@ export class User {
 
   @ManyToMany(() => Chat, (chat) => chat.users)
   chats: Chat[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
+
+  @OneToMany(() => Reply, (reply) => reply.user)
+  replies: Reply[];
 }

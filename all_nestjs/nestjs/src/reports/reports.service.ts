@@ -22,6 +22,9 @@ export class ReportsService {
     return this.reportRepository.find({ relations: ['user'] });
   }
 
+  findOneByReportId(reportId) {
+    return this.reportRepository.findOneBy({ reportId: reportId });
+  }
   findOne(id: number) {
     return `This action returns a #${id} report`;
   }
