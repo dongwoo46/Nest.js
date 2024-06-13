@@ -26,6 +26,7 @@ export class SslController {
   }
 
   @Post('sign')
+  @Public()
   async signCsr(@Body('csr') csr: string) {
     const certificate = this.sslService.signCsr(csr);
     return { certificate };

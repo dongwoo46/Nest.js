@@ -46,6 +46,7 @@ export class SslService {
     return { privateKey: privateKeyPem, csr: csrPem };
   }
 
+  //root ca이용해서 인증서 만들기
   signCsr(csrPem: string): string {
     const caKeyPem = fs.readFileSync('path/to/caKey.key', 'utf8');
     const caCertPem = fs.readFileSync('path/to/caCert.crt', 'utf8');
