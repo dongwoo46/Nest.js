@@ -1,22 +1,22 @@
 version: '3.9'
 
 services:
-  mariadb:
-    image: mariadb:lts
-    container_name: mariadb
-    environment:
-      MARIADB_ROOT_PASSWORD: root_password
-      MARIADB_DATABASE: nestdb
-      MARIADB_USER: nestuser
-      MARIADB_PASSWORD: nestpassword
-    ports:
-      - '3306:3306'
-    # volumes:
-    # - mariadb-data:/var/lib/mysql
-    # - ./my.cnf:/etc/mysql/my.cnf
-    networks:
-      - my_network
-    # command: bash -c "chown mysql:mysql /etc/mysql/my.cnf && chmod 644 /etc/mysql/my.cnf && gosu mysql mysqld" # 파일 권한 수정 후 비루트 사용자로 MariaDB 실행
+  # mariadb:
+  #   image: mariadb:lts
+  #   container_name: mariadb
+  #   environment:
+  #     MARIADB_ROOT_PASSWORD: root_password
+  #     MARIADB_DATABASE: nestdb
+  #     MARIADB_USER: nestuser
+  #     MARIADB_PASSWORD: nestpassword
+  #   ports:
+  #     - '3306:3306'
+  # volumes:
+  # - mariadb-data:/var/lib/mysql
+  # - ./my.cnf:/etc/mysql/my.cnf
+  # networks:
+  #   - my_network
+  # command: bash -c "chown mysql:mysql /etc/mysql/my.cnf && chmod 644 /etc/mysql/my.cnf && gosu mysql mysqld" # 파일 권한 수정 후 비루트 사용자로 MariaDB 실행
 
   # nestjs:
   #   build:
@@ -70,15 +70,15 @@ services:
     networks:
       - my_network
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - '6379:6379'
-    # volumes:
-    #   - redis-data:/data
-    networks:
-      - my_network
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #     - '6379:6379'
+  # volumes:
+  #   - redis-data:/data
+  # networks:
+  # - my_network
 
 # volumes:
 #   mariadb-data: {}
