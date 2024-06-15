@@ -5,6 +5,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ReportsModule } from '../reports/reports.module';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from 'src/auth/constants';
 @Module({
   imports: [
     MulterModule.registerAsync({
@@ -33,6 +35,10 @@ import { ReportsModule } from '../reports/reports.module';
       }),
     }),
     ReportsModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '5m' },
+    }),
   ],
   controllers: [File2Controller],
 })

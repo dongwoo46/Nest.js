@@ -32,8 +32,17 @@ import { ChatEventsModule } from './chat-events/chat-events.module';
 import { SslModule } from './ssl/ssl.module';
 import { CommentsModule } from './comments/comments.module';
 import { ReplyModule } from './reply/reply.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { File3Module } from './file3/file3.module';
+import { MemberModule } from './mongoose/members/members.module';
+import { PostsModule } from './mongoose/posts/posts.module';
 @Module({
   imports: [
+    MongooseModule.forRoot(
+      // mongodb://username:password@ip:port/dbname
+      'mongodb://mongo:mongo_password@127.0.0.1:27017',
+      { dbName: 'nestdb' },
+    ),
     UsersModule,
     ReportsModule,
     AuthModule,
@@ -97,6 +106,9 @@ import { ReplyModule } from './reply/reply.module';
     SslModule,
     CommentsModule,
     ReplyModule,
+    File3Module,
+    MemberModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -111,10 +123,10 @@ import { ReplyModule } from './reply/reply.module';
       provide: APP_PIPE,
       // app 모듈 인스턴스르 만들때마다 애플리케이션에 들어오는 모든 요청을 이 클래스의 인스턴스를 이용해 처리
       useValue: new ValidationPipe({
-        whitelist: true,
-        transform: true, // dto에 정의된 필드 유형이 일치하지 않으면 자동으로 타입변환 수행 ex) 전송된 문자 숫자로 변환
+        whitelist: false,
+        transform: false, // dto에 정의된 필드 유형이 일치하지 않으면 자동으로 타입변환 수행 ex) 전송된 문자 숫자로 변환
         transformOptions: {
-          enableImplicitConversion: true, // 문자열에서 숫자 불리언 또는 배열로 암시적변환 가능 ex) 문자열 "10"은 number타입으로 자동 변환
+          enableImplicitConversion: false, // 문자열에서 숫자 불리언 또는 배열로 암시적변환 가능 ex) 문자열 "10"은 number타입으로 자동 변환
         },
       }),
     },

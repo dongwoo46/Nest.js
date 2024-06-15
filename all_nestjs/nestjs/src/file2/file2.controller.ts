@@ -79,7 +79,7 @@ export class File2Controller {
     });
     return fileArray;
   }
-
+  // 압축 파일 만들기
   @Post('/make-zip')
   async makeZipFile(@Res() res: expRes) {
     // 특정 폴더 경로 설정
@@ -146,13 +146,13 @@ export class File2Controller {
   @UseGuards(NoQueryGuard, FileExistGuard)
   @Get('/download')
   downloadFile(@Req() req, @Res() res: expRes, @Query('file') file: string) {
-    const filepath = `C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/${file}`;
+    const filepath = `C:/Users/dw/Desktop/Nest.js/all_nestjs/nestjs/src/file2/save2/${file}`;
     const fileShowName = 'download.txt';
 
     // 파일 존재 여부 확인
-    // if (!fs.existsSync(filepath)) {
-    //   throw new NotFoundException('파일을 찾을 수 없습니다.');
-    // }
+    if (!fs.existsSync(filepath)) {
+      throw new NotFoundException('파일을 찾을 수 없습니다.');
+    }
 
     res.download(filepath, fileShowName, (err) => {
       if (err) {
@@ -255,9 +255,9 @@ export class File2Controller {
   async encryptFile(@Res() res: expRes) {
     try {
       const inputFile =
-        'C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/sqldump.txt'; // 암호화할 파일 경로
+        'C:/Users/dw/Desktop/Nest.js/all_nestjs/nestjs/src/file2/save2/sqldump.txt'; // 암호화할 파일 경로
       const encryptedFile =
-        'C:/Users/dw/Desktop/Nest.js/StudyMyself/all/src/file2/save2/sqldumpcrypto.txt'; // 암호화된 파일 저장 경로
+        'C:/Users/dw/Desktop/Nest.js/all_nestjs/nestjs/src/file2/save2/sqldumpcrypto.txt'; // 암호화된 파일 저장 경로
       const algorithm = 'aes-256-cbc'; // 암호화 알고리즘
       const key = randomBytes(32); // 암호화에 사용할 키
 
