@@ -1,0 +1,50 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Sample Dashboard",
+    "tags": [],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Prometheus Sample Graph",
+        "targets": [
+          {
+            "expr": "up",
+            "intervalFactor": 2,
+            "legendFormat": "{{instance}}",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 8
+        },
+        "id": 1
+      },
+      {
+        "type": "logs",
+        "title": "Loki Sample Logs",
+        "targets": [
+          {
+            "expr": "{job=\"varlogs\"}",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Loki",
+        "gridPos": {
+          "x": 0,
+          "y": 9,
+          "w": 24,
+          "h": 8
+        },
+        "id": 2
+      }
+    ]
+  }
+}

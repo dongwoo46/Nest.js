@@ -6,14 +6,34 @@
     "auditLog": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\.50f25d6e38a5dce4bc0dac8965dbb33ba9183238-audit.json",
     "files": [
         {
-            "date": 1716573626871,
-            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-05-25.log",
-            "hash": "133f101310d3231da703cc17217320d8987b1fa266a185921c4c2afb00aa5807"
+            "date": 1717685959281,
+            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-06-06.log",
+            "hash": "5241f5a4879a86e536b8b402c8a8368f4e660bc59c1c739c2565c8df83f06237"
         },
         {
-            "date": 1716741615956,
-            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-05-27.log",
-            "hash": "d59bdf0b7cf33ee807cd2e571972d238a80ee43870dfe65b825ff6181e44d20b"
+            "date": 1717686019260,
+            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-06-07.log",
+            "hash": "c5b1a5fb9f8577a39a1f5800fbf46a82928c7295e82d06ae92b80a5f194487de"
+        },
+        {
+            "date": 1717783004964,
+            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-06-08.log",
+            "hash": "cb0146537cc35fa524e5c85029cc29d6e5b546253f77624aa5062e183527ea64"
+        },
+        {
+            "date": 1718302308590,
+            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-06-14.log",
+            "hash": "ff3574fea1b71143ce71511b748b46071b3b67dd542639120ee3f226fd6ee91d"
+        },
+        {
+            "date": 1718406107827,
+            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-06-15.log",
+            "hash": "536343c0136e79f29323218ab64a51c7da31ba0de4e8e33abf37ae9d54eecd08"
+        },
+        {
+            "date": 1718592424539,
+            "name": "C:\\Users\\dw\\Desktop\\Nest.js\\StudyMyself\\all\\src\\logger\\logFile\\2024-06-17.log",
+            "hash": "698931fa43928bb01019cbd0bff3e9aacee0d1d5d1c68087224b8d57611ef56f"
         }
     ],
     "hashType": "sha256"

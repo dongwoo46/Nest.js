@@ -18,9 +18,20 @@ const cookieSession = require('cookie-session');
       isGlobal: true, // configModule을 어플리케이션 영역 전체에 사용한다고 명시(환경정보가 필요한 모든 곳에서-전역사용)
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
-    TypeOrmModule.forRoot({
-      keepConnectionAlive: true,
-    }), // db 마이그레이션 이용
+    // TypeOrmModule.forRoot({
+    //   keepConnectionAlive: true,
+    // }), // db 마이그레이션 이용
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          entities: [User, Report],
+          synchronize: true,
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   // 파이프라인 글로벌 적용 방법
@@ -49,7 +60,7 @@ export class AppModule {
     consumer
       .apply(
         cookieSession({
-          keys: [this.configService.get('COOKIE_KEY')],
+          keys: [this.configService.get('COOKIE_KEY')], // cookie암호화에 사용
         }),
       )
       .forRoutes('*'); // 전체 애플리케이션에 들어오는 모든 요청에 이 미들웨어를 적용시킴
