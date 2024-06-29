@@ -36,11 +36,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { File3Module } from './file3/file3.module';
 import { MemberModule } from './mongoose/members/members.module';
 import { PostsModule } from './mongoose/posts/posts.module';
+import { AesModule } from './aes/aes.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
       // mongodb://username:password@ip:port/dbname
-      'mongodb://mongo:mongo_password@127.0.0.1:27017',
+      'mongodb://127.0.0.1:27017',
       { dbName: 'nestdb' },
     ),
     UsersModule,
@@ -109,6 +110,7 @@ import { PostsModule } from './mongoose/posts/posts.module';
     File3Module,
     MemberModule,
     PostsModule,
+    AesModule,
   ],
   controllers: [AppController],
   providers: [
