@@ -37,6 +37,12 @@ import { File3Module } from './file3/file3.module';
 import { MemberModule } from './mongoose/members/members.module';
 import { PostsModule } from './mongoose/posts/posts.module';
 import { AesModule } from './aes/aes.module';
+import {
+  makeCounterProvider,
+  PrometheusModule,
+} from '@willsoto/nestjs-prometheus';
+import { MetricsModule } from './metrics/metrics.module';
+import { FeatureModule } from './feature/feature.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -47,6 +53,17 @@ import { AesModule } from './aes/aes.module';
     UsersModule,
     ReportsModule,
     AuthModule,
+    // PrometheusModule.register({
+    // defaultLabels: {
+    // app: 'My app',
+    // },
+    // defaultMetrics: {
+    //   // See https://github.com/siimon/prom-client#configuration
+    //   config: {},
+    // },
+    //customMetricPrefix: 'myapp_', // 모든 사용자 정의 메트릭 이름에 'myapp_' 접두사 추가
+    // path: '/metrics', // 메트릭 엔드포인트 변경
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -111,6 +128,7 @@ import { AesModule } from './aes/aes.module';
     MemberModule,
     PostsModule,
     AesModule,
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -132,6 +150,10 @@ import { AesModule } from './aes/aes.module';
         },
       }),
     },
+    // makeCounterProvider({
+    //   name: 'metric_name',
+    //   help: 'metric_help',
+    // }),
   ],
 })
 export class AppModule {}

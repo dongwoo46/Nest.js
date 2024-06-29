@@ -7,6 +7,8 @@ import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { EventsGateway } from './events/events.gateway';
+import { PrometheusInterceptor } from './metrics/metrics.interceptor';
+import { ResponseInterceptor } from './metrics/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -34,6 +36,9 @@ async function bootstrap() {
     origin: 'http://127.0.0.1:5500', // 정확한 출처를 명시
     credentials: true, // 쿠키를 포함한 요청을 허용
   });
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalInterceptors(new PrometheusInterceptor());
 
   // 2초마다 메시지 보내는 것
   // const eventGateway = app.get(EventsGateway);
